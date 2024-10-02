@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { signIn } from 'next-auth/react';
+import { useToast } from '@/hooks/use-toast';
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -18,6 +19,7 @@ const LoginFormSchema = z.object({
 
 export default function LoginForm() {
   const [loading, setLoading] = React.useState(false)
+  const { toast } = useToast()
 
   const form = useForm({
     resolver: zodResolver(LoginFormSchema),
@@ -32,23 +34,24 @@ export default function LoginForm() {
     console.log(values)
 
     // Simulate a 2 second delay
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    try {
-      await signIn('credentials', {
-        email: values.email,
-        password: values.password
+    const user = await signIn('credentials', {
+      email: values.email,
+      password: values.password
+    })
+
+    if(user?.error) {
+      toast({
+        title: 'Error',
+        description: 'Invalid email or password',
+        variant: 'destructive'
       })
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setLoading(false)
     }
-    
-    
+
+    setLoading(false)
   }
 
   return (
-    <main className="flex justify-center items-center p-4 min-h-[calc(100vh-94px)] sm:min-h-[calc(100vh-94px)]">
+    <main className="flex justify-center items-center p-4 min-h-[calc(100vh-94px)] sm:min-h-[calc(100vh-90px)]">
       <Card className="rounded-none border-none">
         <CardContent className="px-0 py-0">
           <div className="flex flex-col sm:flex-row bg-white overflow-hidden shadow-xl max-w-4xl w-full">

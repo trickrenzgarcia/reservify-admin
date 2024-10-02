@@ -11,7 +11,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           credentials.email as string,
           credentials.password as string
         );
-        return user;
+
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
   ],

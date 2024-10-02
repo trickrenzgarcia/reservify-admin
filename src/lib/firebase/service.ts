@@ -1,5 +1,5 @@
 import { getDocs, collection, where, query } from "firebase/firestore";
-import { AdminUser, Test } from "./types";
+import { AdminUser, Test, User } from "./types";
 import { db } from ".";
 import bcrypt from "bcryptjs";
 
@@ -26,7 +26,26 @@ export async function getTests(): Promise<Test[]> {
 
     return tests;
   } catch (error) {
-    console.error("Error fetching documents: ", error);
+    throw error;
+  }
+}
+
+export async function getAllUsers(): Promise<User[]> {
+  const usersCollection = collection(db, "users");
+
+  try {
+    const snapshot = await getDocs(usersCollection);
+
+    const users: User[] = snapshot.docs.map(
+      (doc) =>
+        ({
+          id: doc.id,
+          ...doc.data(),
+        } as User)
+    );
+
+    return users;
+  } catch (error) {
     throw error;
   }
 }
@@ -69,6 +88,6 @@ export async function adminLogin(
 
     return adminUser;
   } catch (error) {
-    return null;
+    throw error;
   }
 }

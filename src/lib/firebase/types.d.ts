@@ -3,6 +3,12 @@ export type Test = {
   projectName: string;
 };
 
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+};
+
 export type AdminUser = {
   id: string;
   email: string;

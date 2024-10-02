@@ -22,6 +22,14 @@ export function dateToday(date: Date): string {
     .format(date)
     .toUpperCase();
 
+  // Get the time (with hours, minutes, and seconds)
+  const formattedTime = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  }).format(date);
+
   // Combine both parts
-  return `${formattedDate} | ${dayOfWeek}`;
+  return `${formattedDate} | ${dayOfWeek} | ${formattedTime}`;
 }

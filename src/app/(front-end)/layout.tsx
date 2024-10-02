@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth';
 import Navbar from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
 import Sidebar from '@/components/Layout/Sidebar';
+import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -43,6 +44,7 @@ export default async function RootLayout({
             <div className="min-h-screen flex flex-col">
               <Navbar />
               {children}
+              <Toaster />
               <Footer />
             </div>
             
