@@ -11,7 +11,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           credentials.email as string,
           credentials.password as string
         );
-        console.log("User: ", user);
         return user;
       },
     }),
@@ -19,8 +18,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async session({ session, token }) {
       if (token) {
-        console.log("Token: ", token);
+        session.user.id = token.sub!;
       }
+
       return session;
     },
     async jwt({ token }) {

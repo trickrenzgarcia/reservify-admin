@@ -1,13 +1,13 @@
 import { getDocs, collection, where, query } from "firebase/firestore";
 import { AdminUser, Test } from "./types";
 import { db } from ".";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-async function verifyPassword(
+export async function verifyPassword(
   plainPassword: string,
   hashedPassword: string
 ): Promise<boolean> {
-  return await bcrypt.compare(plainPassword, hashedPassword);
+  return bcrypt.compare(plainPassword, hashedPassword);
 }
 
 export async function getTests(): Promise<Test[]> {

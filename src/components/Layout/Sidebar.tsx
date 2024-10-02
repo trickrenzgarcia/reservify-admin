@@ -1,0 +1,50 @@
+'use client'
+
+import { cn } from "@/lib/utils";
+import { signOut } from 'next-auth/react';
+import Link from "next/link";
+import { usePathname } from 'next/navigation';
+import React from "react";
+
+const navList = [
+  { title: "USER PROFILES", href: "/admin/user-profiles" },
+  { title: "VENUE AND INVENTORY", href: "/admin/venue-and-inventory" },
+  { title: "PACKAGES", href: "/admin/packages" },
+  { title: "RESERVATIONS", href: "/admin/reservations" },
+  { title: "PAYMENTS", href: "/admin/payments" },
+  { title: "PERMITS", href: "/admin/permits" },
+  { title: "CUSTOMER PREFERENCES", href: "/admin/customer-preferences" },
+  { title: "DATA ANALYTICS", href: "/admin/data-analytics" },
+  { title: "REPORTS", href: "/admin/reports" },
+];
+
+export default function Sidebar() {
+  const pathname = usePathname();
+
+  return (
+    <div className="p-4 hidden md:block w-64 bg-[#E1E1E1] min-h-full">
+      <ul className="flex flex-col gap-2">
+        {navList.map((nav, index) => (
+          <Link href={nav.href} key={index}>
+            <li
+              className={cn(
+                "p-2 rounded-lg text-center font-bold py-3",
+                index % 2 === 0 ? "bg-[#ECECEC]" : "bg-[#F3F3F3]",
+                pathname === nav.href && "bg-[#558134] hover:bg-[#66993e] text-white border-2 border-primary"
+              )}
+            >
+              {nav.title}
+            </li>
+          </Link>
+        ))}
+        <Link href="/" onClick={async () => {
+          await signOut({ redirectTo: '/login' });
+        }}>
+          <li className="p-2 rounded-lg text-center font-bold py-3 bg-[#ECECEC]">
+            SIGN OUT
+          </li>
+        </Link>
+      </ul>
+    </div>
+  );
+}

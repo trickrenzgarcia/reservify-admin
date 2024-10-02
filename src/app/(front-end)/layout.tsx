@@ -6,6 +6,7 @@ import QueryClientProvider from '@/provider/query-provider';
 import { auth } from '@/lib/auth';
 import Navbar from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
+import Sidebar from '@/components/Layout/Sidebar';
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -39,9 +40,12 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <QueryClientProvider>
-            <Navbar />
-            {children}
-            <Footer />
+            <div className="min-h-screen flex flex-col">
+              <Navbar />
+              {children}
+              <Footer />
+            </div>
+            
           </QueryClientProvider>
         </SessionProvider>
       </body>
