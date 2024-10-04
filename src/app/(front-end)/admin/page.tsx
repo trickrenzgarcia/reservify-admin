@@ -2,6 +2,7 @@ import HomeHeader from '@/components/Interface/HomeHeader';
 import Sidebar from '@/components/Layout/Sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { auth } from '@/lib/auth';
+import { getUsersCount } from '@/lib/firebase/service';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {
@@ -10,6 +11,8 @@ export default async function Home() {
   if(!session?.user) {
     redirect('/login');
   }
+
+  const usersCount = await getUsersCount();
 
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
@@ -30,6 +33,14 @@ export default async function Home() {
             <CardContent className='py-8'>
               <div className='text-center'>
                 <h3 className='text-lg mb-4'>REGISTERED CLIENT</h3>
+                <p className='text-4xl font-bold'>{usersCount}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className='border-4 border-black rounded-3xl'>
+            <CardContent className='py-8'>
+              <div className='text-center'>
+                <h3 className='text-lg mb-4'>FINISHED RESERVATIONS</h3>
                 <p className='text-4xl font-bold'>0</p>
               </div>
             </CardContent>
@@ -37,15 +48,7 @@ export default async function Home() {
           <Card className='border-4 border-black rounded-3xl'>
             <CardContent className='py-8'>
               <div className='text-center'>
-                <h3 className='text-lg mb-4'>REGISTERED CLIENT</h3>
-                <p className='text-4xl font-bold'>0</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className='border-4 border-black rounded-3xl'>
-            <CardContent className='py-8'>
-              <div className='text-center'>
-                <h3 className='text-lg mb-4'>REGISTERED CLIENT</h3>
+                <h3 className='text-lg mb-4'>PENDING RESERVATIONS</h3>
                 <p className='text-4xl font-bold'>0</p>
               </div>
             </CardContent>

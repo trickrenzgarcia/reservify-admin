@@ -31,7 +31,6 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof LoginFormSchema>) {
     setLoading(true)
-    console.log(values)
 
     // Simulate a 2 second delay
     const user = await signIn('credentials', {

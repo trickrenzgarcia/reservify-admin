@@ -1,8 +1,11 @@
 async function main() {
-  const { adminLogin } = await import("./firebase/service");
+  const { editUser } = await import("./firebase/service");
 
-  const tests = await adminLogin("admin@boardmarts.com", "admin");
-  console.log(tests);
+  const testEdit = await editUser("90pkJldMdRzVtGjg0q4e", {
+    name: "Patrick",
+    email: "trickrenzgarcia@gmail.com",
+  });
+  console.log(testEdit);
 
   process.exit(0);
 }

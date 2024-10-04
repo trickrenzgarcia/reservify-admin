@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
+import DataTableSearchBar from './data-table-search-bar'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -60,14 +61,15 @@ export default function UsersTable<TData, TValue>({ columns, data }: DataTablePr
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
+      <DataTableSearchBar table={table} />
+      <div className="rounded-md border-none">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead key={header.id} colSpan={header.colSpan} className='p-4'>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -88,7 +90,7 @@ export default function UsersTable<TData, TValue>({ columns, data }: DataTablePr
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className='p-4 lg:text-lg'>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

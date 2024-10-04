@@ -6,7 +6,6 @@ import QueryClientProvider from '@/provider/query-provider';
 import { auth } from '@/lib/auth';
 import Navbar from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
-import Sidebar from '@/components/Layout/Sidebar';
 import { Toaster } from '@/components/ui/toaster';
 
 const geistSans = localFont({

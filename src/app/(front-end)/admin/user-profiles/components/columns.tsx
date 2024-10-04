@@ -2,11 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-
 import { labels, priorities, statuses } from "../data/data"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 import { User } from '@/lib/firebase/types'
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -15,14 +15,28 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
+      const user = row.original;
 
       return (
         <div className="flex space-x-2">
-          {label}
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
-          </span>
+          <Dialog>
+            <DialogTrigger asChild>
+              <span className="max-w-[500px] truncate font-medium hover:text-blue-600 hover:cursor-pointer">
+                {row.getValue("name")}
+              </span>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>User Details</DialogTitle>
+              <div className="flex flex-col space-y-2">
+                <span className="font-bold">ID</span>
+                <span>{user.id}</span>
+                <span className="font-bold">Name</span>
+                <span>{user.name}</span>
+                <span className="font-bold">Email</span>
+                <span>{user.email}</span>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       )
     },
@@ -33,17 +47,10 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Type" />
     ),
     cell: ({ row }) => {
-      const type = types.find(
-        (t) => t.value === row.getValue("type")
-      )
-
-      if (!status) {
-        return null
-      }
 
       return (
         <div className="flex w-[100px] items-center">
-          <span>{type.label}</span>
+          <span>CLIENT</span>
         </div>
       )
     },

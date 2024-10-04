@@ -1,4 +1,12 @@
-import { getDocs, collection, where, query } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  where,
+  query,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { AdminUser, Test, User } from "./types";
 import { db } from ".";
 import bcrypt from "bcryptjs";
@@ -45,6 +53,50 @@ export async function getAllUsers(): Promise<User[]> {
     );
 
     return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function editUser(id: string, data: Partial<any>): Promise<void> {
+  const userDocRef = doc(db, "users", id);
+
+  try {
+    await updateDoc(userDocRef, data);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function deleteUser(id: string): Promise<void> {
+  const userDocRef = doc(db, "users", id);
+  const accountsCollection = collection(db, "accounts");
+
+  const q = query(accountsCollection, where("userId", "==", id));
+
+  try {
+    const queue1 = deleteDoc(userDocRef);
+    const queue2 = getDocs(q);
+
+    const [_, accountsSnapshot] = await Promise.all([queue1, queue2]);
+
+    if (accountsSnapshot.empty) return;
+
+    accountsSnapshot.docs.forEach(async (doc) => {
+      await deleteDoc(doc.ref);
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUsersCount(): Promise<number> {
+  const usersCollection = collection(db, "users");
+
+  try {
+    const snapshot = await getDocs(usersCollection);
+
+    return snapshot.size;
   } catch (error) {
     throw error;
   }

@@ -9,10 +9,17 @@ type HomeHeaderProps = {
 
 export default function HomeHeader({ name }: HomeHeaderProps) {
   const { formattedDate } = useDateTimeToday()
+  const [isMounted, setIsMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setIsMounted(true)
+  }, [])
+  
+
   return (
     <div className='mb-8'>
       <h1 className='font-bold text-3xl xl:text-6xl tracking-wider'>WELCOME ADMIN {name?.toUpperCase()}!</h1>
-      <h2 className='text-xl tracking-widest'>{formattedDate}</h2>
+      {isMounted && <h2 className='text-xl tracking-widest'>{formattedDate}</h2>}
     </div>
   )
 }
