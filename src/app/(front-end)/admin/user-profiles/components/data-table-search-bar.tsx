@@ -4,7 +4,7 @@ import { Search } from "lucide-react"
 import React from 'react'
 
 interface DataTableSearchBarProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export default function DataTableSearchBar<TData>({ table }: DataTableSearchBarProps<TData>) {

@@ -5,8 +5,11 @@ import { Row } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { userSchema } from '../data/schema'
-import { deleteUser } from '@/lib/firebase/service'
+import { deleteUser, editUser } from '@/lib/firebase/service'
 import { useRouter } from 'next/navigation'
+import React from 'react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 
 interface DataTableRowActionsProps<TData> {
@@ -18,10 +21,28 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter(); 
   const user = userSchema.parse(row.original)
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [userDetails, setUserDetails] = React.useState({
+    name: user.name,
+    email: user.email
+  })
 
   async function handleDeleteUser() {
+    setIsLoading(true)
     await deleteUser(user.id)
-    console.log('Deleting user:', user.id)
+    setIsLoading(false)
+    router.refresh();
+  }
+
+  async function handleEditUser() {
+    if(userDetails.name === user.name) return;
+
+    setIsLoading(true)
+    await editUser(user.id, {
+      name: userDetails.name,
+      email: userDetails.email,
+    })
+    setIsLoading(false)
     router.refresh();
   }
 
@@ -29,14 +50,30 @@ export function DataTableRowActions<TData>({
     <div className='flex gap-4'>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-blue-600" size='responsive'>
+          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-blue-600" disabled={isLoading} size='responsive'>
             Edit
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Edit User</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription>
+            Edit user details
+          </AlertDialogDescription>
+          <div className='space-y-4'>
+            <section>
+              <Label htmlFor='name'>Name</Label>
+              <Input id='name' value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})} />
+            </section>
+            <section>
+              <Label htmlFor='email'>Email</Label>
+              <Input id='email' value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})} disabled />
+            </section> 
+          </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogAction onClick={handleEditUser} disabled={isLoading} className='bg-blue-600'>Save</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -44,7 +81,7 @@ export function DataTableRowActions<TData>({
       
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-red-600" size='responsive'>
+          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-red-600" disabled={isLoading} size='responsive'>
             Delete
           </Button>
         </AlertDialogTrigger>
@@ -58,7 +95,7 @@ export function DataTableRowActions<TData>({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteUser} className='bg-red-600'>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleDeleteUser} disabled={isLoading} className='bg-red-600'>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
