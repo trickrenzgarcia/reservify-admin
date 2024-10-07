@@ -9,8 +9,11 @@ export default async function UserProfilesPage() {
 
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
+      {/* Sidebar */}
       <Sidebar />
-      <div className='flex-1 flex flex-col p-4 lg:p-16'>
+
+      {/* Content area takes the remaining space */}
+      <div className="flex-1 overflow-x-auto p-4">
         <UsersTable data={users} columns={columns} />
       </div>
     </div>

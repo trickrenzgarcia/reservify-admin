@@ -62,8 +62,8 @@ export default function UsersTable<TData, TValue>({ columns, data }: DataTablePr
   return (
     <div className="space-y-4">
       <DataTableSearchBar table={table} />
-      <div className="rounded-md border-none">
-        <Table>
+      <div className="rounded-md border-none ">
+        <Table className="min-w-[300px]">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
