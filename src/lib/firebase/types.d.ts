@@ -3,10 +3,19 @@ export type Test = {
   projectName: string;
 };
 
+export type FirestoreCollections = "users" | "inventory" | "admin";
+
 export type User = {
   id: string;
   email: string;
   name: string;
+};
+
+export type Inventory = {
+  id: string;
+  name: string;
+  quantity: string;
+  amount: number;
 };
 
 export type AdminUser = {

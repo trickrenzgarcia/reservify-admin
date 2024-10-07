@@ -4,8 +4,8 @@ import { Row } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { userSchema } from '../data/schema'
-import { _editDoc, deleteUser } from '@/lib/firebase/service'
+import { inventorySchema } from '../data/schema'
+//import { deleteInventory, editInventory } from '@/lib/firebase/service'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { Input } from '@/components/ui/input'
@@ -20,28 +20,30 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter(); 
-  const user = userSchema.parse(row.original)
+  const inventory = inventorySchema.parse(row.original)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-  const [userDetails, setUserDetails] = React.useState({
-    name: user.name,
-    email: user.email
+  const [inventoryDetails, setInventoryDetails] = React.useState({
+    name: inventory.name,
+    quantity: inventory.quantity,
+    amount: inventory.amount
   })
 
-  async function handleDeleteUser() {
+  async function handleDeleteInventory() {
     setIsLoading(true)
-    await deleteUser(user.id)
+    //await deleteInventory(inventory.id)
     setIsLoading(false)
     router.refresh();
   }
 
-  async function handleEditUser() {
-    if(userDetails.name === user.name) return;
+  async function handleEditInventory() {
+    if(inventoryDetails.name === inventory.name) return;
 
     setIsLoading(true)
-    await _editDoc("users", user.id, {
-      name: userDetails.name,
-      email: userDetails.email,
-    })
+    // await editInventory(inventory.id, {
+    //   name: inventoryDetails.name,
+    //   quantity: inventoryDetails.quantity,
+    //   amount: inventoryDetails.amount
+    // })
     setIsLoading(false)
     router.refresh();
   }
@@ -64,16 +66,20 @@ export function DataTableRowActions<TData>({
           <div className='space-y-4'>
             <section>
               <Label htmlFor='name'>Name</Label>
-              <Input id='name' value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})} />
+              <Input id='name' value={inventory.name} onChange={(e) => setInventoryDetails({...inventoryDetails, name: e.target.value})} />
             </section>
             <section>
-              <Label htmlFor='email'>Email</Label>
-              <Input id='email' value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})} disabled />
+              <Label htmlFor='quantity'>Quantity</Label>
+              <Input id='quantity' type='number' value={inventory.quantity} onChange={(e) => setInventoryDetails({...inventoryDetails, quantity: parseInt(e.target.value)})} />
+            </section>
+            <section>
+              <Label htmlFor='amount'>Amount</Label>
+              <Input id='amount' type='number' value={inventory.amount} onChange={(e) => setInventoryDetails({...inventoryDetails, amount: parseFloat(e.target.value)})} />
             </section> 
           </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleEditUser} disabled={isLoading} className='bg-blue-600'>Save</AlertDialogAction>
+            <AlertDialogAction onClick={handleEditInventory} disabled={isLoading} className='bg-blue-600'>Save</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -95,7 +101,7 @@ export function DataTableRowActions<TData>({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteUser} disabled={isLoading} className='bg-red-600'>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleDeleteInventory} disabled={isLoading} className='bg-red-600'>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

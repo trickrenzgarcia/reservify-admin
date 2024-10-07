@@ -7,7 +7,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { AdminUser, Test, User } from "./types";
+import { AdminUser, FirestoreCollections } from "./types";
 import { db } from ".";
 import bcrypt from "bcryptjs";
 
@@ -18,51 +18,52 @@ export async function verifyPassword(
   return bcrypt.compare(plainPassword, hashedPassword);
 }
 
-export async function getTests(): Promise<Test[]> {
-  const testsCollection = collection(db, "test");
+export async function getCollection<T>(collectionName: FirestoreCollections) {
+  const collectionRef = collection(db, collectionName);
 
   try {
-    const querySnapshot = await getDocs(testsCollection);
+    const snapshot = await getDocs(collectionRef);
 
-    const tests: Test[] = querySnapshot.docs.map(
+    const data: T[] = snapshot.docs.map(
       (doc) =>
         ({
           id: doc.id,
           ...doc.data(),
-        } as Test)
+        } as T)
     );
 
-    return tests;
+    return data;
   } catch (error) {
     throw error;
   }
 }
 
-export async function getAllUsers(): Promise<User[]> {
-  const usersCollection = collection(db, "users");
+export async function _deleteDoc(
+  collectionName: FirestoreCollections,
+  id: string
+): Promise<void> {
+  if (!collectionName) return;
+
+  const docRef = doc(db, collectionName, id);
 
   try {
-    const snapshot = await getDocs(usersCollection);
-
-    const users: User[] = snapshot.docs.map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as User)
-    );
-
-    return users;
+    await deleteDoc(docRef);
   } catch (error) {
     throw error;
   }
 }
 
-export async function editUser(id: string, data: Partial<any>): Promise<void> {
-  const userDocRef = doc(db, "users", id);
+export async function _editDoc(
+  collectionName: FirestoreCollections,
+  docId: string,
+  data: Partial<any>
+): Promise<void> {
+  if (!collectionName) return;
+
+  const docRef = doc(db, collectionName, docId);
 
   try {
-    await updateDoc(userDocRef, data);
+    await updateDoc(docRef, data);
   } catch (error) {
     throw error;
   }
