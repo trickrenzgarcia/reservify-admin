@@ -10,7 +10,11 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-
+import { _editDoc } from '@/lib/firebase/service'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -22,11 +26,16 @@ export function DataTableRowActions<TData>({
   const router = useRouter(); 
   const inventory = inventorySchema.parse(row.original)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
-  const [inventoryDetails, setInventoryDetails] = React.useState({
-    name: inventory.name,
-    quantity: inventory.quantity,
-    amount: inventory.amount
-  })
+
+
+  const form = useForm<z.infer<typeof inventorySchema>>({
+    resolver: zodResolver(inventorySchema),
+    defaultValues: {
+      name: inventory.name,
+      quantity: inventory.quantity,
+      amount: inventory.amount
+    }
+  });
 
   async function handleDeleteInventory() {
     setIsLoading(true)
@@ -35,15 +44,14 @@ export function DataTableRowActions<TData>({
     router.refresh();
   }
 
-  async function handleEditInventory() {
-    if(inventoryDetails.name === inventory.name) return;
-
+  async function handleEditInventory(values: z.infer<typeof inventorySchema>) {
     setIsLoading(true)
-    // await editInventory(inventory.id, {
+    // await _editDoc("inventory", inventory.id, {
     //   name: inventoryDetails.name,
     //   quantity: inventoryDetails.quantity,
     //   amount: inventoryDetails.amount
     // })
+    console.log("Values: ", values)
     setIsLoading(false)
     router.refresh();
   }
@@ -58,29 +66,62 @@ export function DataTableRowActions<TData>({
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Edit User</AlertDialogTitle>
+            <AlertDialogTitle>Edit Item</AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogDescription>
             Edit user details
           </AlertDialogDescription>
           <div className='space-y-4'>
-            <section>
-              <Label htmlFor='name'>Name</Label>
-              <Input id='name' value={inventory.name} onChange={(e) => setInventoryDetails({...inventoryDetails, name: e.target.value})} />
-            </section>
-            <section>
-              <Label htmlFor='quantity'>Quantity</Label>
-              <Input id='quantity' type='number' value={inventory.quantity} onChange={(e) => setInventoryDetails({...inventoryDetails, quantity: parseInt(e.target.value)})} />
-            </section>
-            <section>
-              <Label htmlFor='amount'>Amount</Label>
-              <Input id='amount' type='number' value={inventory.amount} onChange={(e) => setInventoryDetails({...inventoryDetails, amount: parseFloat(e.target.value)})} />
-            </section> 
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleEditInventory)}>
+
+                <FormField
+                  control={form.control}
+                  name='name'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='quantity'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          {...field}
+                          type="number"
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10))} // Convert to number
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='amount'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          {...field}
+                          type="number"
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10))} // Convert to number
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button>Save</Button>
+              </form>
+            </Form>
           </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleEditInventory} disabled={isLoading} className='bg-blue-600'>Save</AlertDialogAction>
-          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
