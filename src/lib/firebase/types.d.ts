@@ -3,7 +3,7 @@ export type Test = {
   projectName: string;
 };
 
-export type FirestoreCollections = "users" | "inventory" | "admin";
+export type FirestoreCollections = "users" | "inventory" | "package" | "admin";
 
 export type User = {
   id: string;
@@ -16,6 +16,20 @@ export type Inventory = {
   name: string;
   quantity: number;
   amount: number;
+};
+
+export type Material = {
+  id: string;
+  name: string;
+  amount: number;
+};
+
+export type Package = {
+  id: string;
+  name: string;
+  details: string;
+  amount: number;
+  materials: Material[];
 };
 
 export type AdminUser = {

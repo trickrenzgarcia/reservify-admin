@@ -4,7 +4,7 @@ import { Row } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { inventorySchema } from '../data/schema'
+import { packageSchema } from '../data/schema'
 //import { deleteInventory, editInventory } from '@/lib/firebase/service'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast'
 import { ToastAction } from '@/components/ui/toast'
 import { dateToday } from '@/lib/utils'
+import { Textarea } from '@/components/ui/textarea'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -26,35 +27,36 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter(); 
-  const inventory = inventorySchema.parse(row.original)
+  const pack = packageSchema.parse(row.original)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [open, setOpen] = React.useState<boolean>(false);
   const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof inventorySchema>>({
-    resolver: zodResolver(inventorySchema),
+  const form = useForm<z.infer<typeof packageSchema>>({
+    resolver: zodResolver(packageSchema),
     defaultValues: {
-      id: inventory.id,
-      amount: inventory.amount,
-      quantity: inventory.quantity,
-      name: inventory.name
+      id: pack.id,
+      details: pack.details,
+      amount: pack.amount,
+      materials: pack.materials
     }
   })
 
   async function handleDeleteInventory() {
     setIsLoading(true)
-    await _deleteDoc("inventory", inventory.id)
+    await _deleteDoc("package", pack.id)
     router.refresh();
     setIsLoading(false)
   }
 
-  async function handleEdit(values: z.infer<typeof inventorySchema>) {
+  async function handleEdit(values: z.infer<typeof packageSchema>) {
     setIsLoading(true)
     setOpen(false)
-    await _editDoc("inventory", values.id, {
+    await _editDoc("package", values.id, {
       name: values.name,
-      quantity: values.quantity,
-      amount: values.amount      
+      details: values.details,
+      amount: values.amount,
+      materials: values.materials
     })
     toast({
       title: 'Item Updated!',
@@ -80,7 +82,7 @@ export function DataTableRowActions<TData>({
             <AlertDialogTitle>Edit Item</AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogDescription>
-            Edit user details
+            Edit Package
           </AlertDialogDescription>
           <div className='space-y-4'>
             <Form {...form}>
@@ -101,17 +103,12 @@ export function DataTableRowActions<TData>({
                 />
                 <FormField
                   control={form.control}
-                  name='quantity'
+                  name='details'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor='quantity'>Qauntity:</FormLabel>
+                      <FormLabel htmlFor='quantity'>Details:</FormLabel>
                       <FormControl>
-                        <Input
-                          id='quantity'
-                          {...field}
-                          type="number"
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10))} // Convert to number
-                        />
+                        <Textarea {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
