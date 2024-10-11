@@ -1,22 +1,11 @@
 'use client'
 
+import { navList } from '@/lib/constant';
 import { cn } from "@/lib/utils";
 import { signOut } from 'next-auth/react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
 import React from "react";
-
-const navList = [
-  { title: "USER PROFILES", href: "/admin/user-profiles" },
-  { title: "VENUE AND INVENTORY", href: "/admin/venue-and-inventory" },
-  { title: "PACKAGES", href: "/admin/packages" },
-  { title: "RESERVATIONS", href: "/admin/reservations" },
-  { title: "PAYMENTS", href: "/admin/payments" },
-  { title: "PERMITS", href: "/admin/permits" },
-  { title: "CUSTOMER PREFERENCES", href: "/admin/customer-preferences" },
-  { title: "DATA ANALYTICS", href: "/admin/data-analytics" },
-  { title: "REPORTS", href: "/admin/reports" },
-];
 
 export default function Sidebar() {
   const pathname = usePathname();
