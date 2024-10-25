@@ -135,7 +135,11 @@ export function DataTableRowActions<TData>({
                     </FormItem>
                   )}
                 />
-                <Button>Save</Button>
+                <div className='space-x-2'>
+                  <Button>Save</Button>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                </div>
+                
               </form>
             </Form>
           </div>

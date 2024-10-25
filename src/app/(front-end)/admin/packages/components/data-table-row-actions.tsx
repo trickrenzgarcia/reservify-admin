@@ -36,9 +36,9 @@ export function DataTableRowActions<TData>({
     resolver: zodResolver(packageSchema),
     defaultValues: {
       id: pack.id,
-      details: pack.details,
-      amount: pack.amount,
-      materials: pack.materials
+      name: pack.name,
+      price: pack.price,
+      inclusions: pack.inclusions
     }
   })
 
@@ -54,9 +54,8 @@ export function DataTableRowActions<TData>({
     setOpen(false)
     await _editDoc("package", values.id, {
       name: values.name,
-      details: values.details,
-      amount: values.amount,
-      materials: values.materials
+      price: values.price,
+      inclusions: values.inclusions
     })
     toast({
       title: 'Item Updated!',
