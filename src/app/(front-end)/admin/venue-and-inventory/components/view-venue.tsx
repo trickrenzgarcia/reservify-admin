@@ -126,7 +126,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
     setIsLoading(true)
     let tempThumbnail = values.thumbnail;
     if(thumbnail) {
-      const thumbnailRef = await ref(storage, `venues/${selectedVenue?.id}/thumbnail_${crypto.randomUUID()}`)
+      const thumbnailRef = await ref(storage, `venues/thumbnail_${crypto.randomUUID()}`)
       await uploadString(thumbnailRef, thumbnail, 'data_url')
       tempThumbnail = await getDownloadURL(thumbnailRef)
     }
@@ -136,7 +136,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
       ? await Promise.all(
           values.images.map(async (base64Image) => {
             if (base64Image.startsWith('data:image/')) {
-              const imageRef = ref(storage, `venues/${selectedVenue?.id}/${crypto.randomUUID()}`)
+              const imageRef = ref(storage, `venues/${crypto.randomUUID()}`)
               await uploadString(imageRef, base64Image, 'data_url')
               return await getDownloadURL(imageRef)
             }
@@ -357,7 +357,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                             </div>
                             
                             <div className='grid grid-cols-2 lg:grid-cols-3 gap-2 mt-2'>
-                              {selectedVenue.images.length > 0 ? selectedVenue.images.map((image, index) => (
+                              {selectedVenue.images && selectedVenue.images.map((image, index) => (
                                 <div
                                   key={image + index}
                                   className='relative group flex flex-col items-center justify-center bg-primary w-full rounded-lg overflow-hidden'
@@ -381,7 +381,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                                     </button>
                                   </div>
                                 </div>
-                              )) : (
+                              )) || (
                                 <p className='italic'>No Image Uploaded.</p>
                               )}
                             </div>

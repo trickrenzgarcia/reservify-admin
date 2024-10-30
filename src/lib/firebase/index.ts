@@ -5,13 +5,13 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBHCdtN61I0SDVk5gAR43rKDDtXhIF3Saw",
-  authDomain: "ecobin-2f816.firebaseapp.com",
-  projectId: "ecobin-2f816",
-  storageBucket: "ecobin-2f816.appspot.com",
-  messagingSenderId: "236441465522",
-  appId: "1:236441465522:web:52d01731c6d41148af8fab",
-  measurementId: "G-Z29KQZ9MZ3",
+  apiKey: "AIzaSyCl-02v-Rs_zozDw_t8euLnywQLwd5wtnI",
+  authDomain: "reservify-fd049.firebaseapp.com",
+  projectId: "reservify-fd049",
+  storageBucket: "reservify-fd049.appspot.com",
+  messagingSenderId: "869543132487",
+  appId: "1:869543132487:web:ef3a092b81faaa6f7c2062",
+  measurementId: "G-QR2060E3J3",
 };
 
 // Initialize Firebase
@@ -21,6 +21,6 @@ const db = getFirestore(app);
 // Initialize Firebase Auth
 const auth = getAuth(app);
 // Initialize Firebase Storage
-const storage = getStorage(app, "gs://ecobin-2f816.appspot.com");
+const storage = getStorage(app, "gs://reservify-fd049.appspot.com");
 
 export { app as firebaseApp, db, auth as firebaseAuth, storage };

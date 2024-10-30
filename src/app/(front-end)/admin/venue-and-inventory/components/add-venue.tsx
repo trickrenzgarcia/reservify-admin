@@ -14,6 +14,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Image from 'next/image';
 import { Venue } from '@/lib/firebase/types';
+import { _addDoc, _editDoc } from '@/lib/firebase/service';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 
 const VenueFormSchema = z.object({
   id: z.string(),
@@ -117,7 +119,38 @@ export default function AddVenueForm({ isAddVenue, setIsAddVenue }: Props) {
   }
 
   const onSubmit = async (values: z.infer<typeof VenueFormSchema>) => {
+    setIsLoading(true)
+    let tempThumbnail = values.thumbnail;
+    if(thumbnail) {
+      const thumbnailRef = await ref(storage, `venues/thumbnail_${crypto.randomUUID()}`)
+      await uploadString(thumbnailRef, thumbnail, 'data_url')
+      tempThumbnail = await getDownloadURL(thumbnailRef)
+    }
 
+    // Upload images if they are in base64 format and get their URLs
+    const uploadedImages = values.images && values.images.some(img => img.startsWith('data:image/'))
+      ? await Promise.all(
+          values.images.map(async (base64Image) => {
+            if (base64Image.startsWith('data:image/')) {
+              const imageRef = ref(storage, `venues/${crypto.randomUUID()}`)
+              await uploadString(imageRef, base64Image, 'data_url')
+              return await getDownloadURL(imageRef)
+            }
+            return base64Image // Keep the existing URL if it's already a URL
+          })
+        )
+      : values.images || []
+
+    const { id, ...valuesWithoutId } = values;
+    _addDoc("venues", {
+      ...valuesWithoutId,
+      thumbnail: tempThumbnail,
+      images: uploadedImages // Array of Firebase Storage URLs only
+    })
+
+    form.reset()
+    setIsAddVenue(false)
+    setIsLoading(false)
   }
 
   return (
@@ -167,8 +200,9 @@ export default function AddVenueForm({ isAddVenue, setIsAddVenue }: Props) {
               className="px-10 rounded-full font-semibold"
               type="submit"
               variant="default"
+              disabled={isLoading}
             >
-              Save
+              Add
             </Button>
             <Button
               className="px-8 rounded-full font-semibold hover:bg-red-500 hover:text-primary-foreground"
@@ -204,17 +238,23 @@ export default function AddVenueForm({ isAddVenue, setIsAddVenue }: Props) {
           />
           <div className="flex items-center gap-4 mt-2">
             <div className="w-1/2 aspect-video p-0">
-              <Image
-                className="h-full w-full rounded-xl"
-                src={thumbnail || entry?.thumbnail}
-                loading="lazy"
-                alt="Thumbnail"
-                width={200}
-                height={200}
-                style={{
-                  objectFit: "cover",
-                }}
-              />
+              {thumbnail ? (
+                <Image
+                  className="h-full w-full rounded-xl"
+                  src={thumbnail}
+                  loading="lazy"
+                  alt="Thumbnail"
+                  width={200}
+                  height={200}
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <div className='w-full h-full flex justify-center items-center rounded-xl bg-gray-200'>
+                  <h1 className='text-xl'>No Image</h1>
+                </div>
+              )}              
             </div>
             <div className="flex flex-col items-start gap-2">
               <Label className="font-bold">

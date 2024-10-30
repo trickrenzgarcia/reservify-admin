@@ -6,6 +6,7 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import { AdminUser, FirestoreCollections } from "./types";
 import { db } from ".";
@@ -33,6 +34,21 @@ export async function getCollection<T>(collectionName: FirestoreCollections) {
     );
 
     return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function _addDoc(
+  collectionName: FirestoreCollections,
+  data: Omit<Partial<any>, "id">
+): Promise<void> {
+  try {
+    const docRef = doc(collection(db, collectionName));
+    const docId = docRef.id;
+
+    // Add the document with ID as field
+    await setDoc(docRef, { ...data, id: docId });
   } catch (error) {
     throw error;
   }
