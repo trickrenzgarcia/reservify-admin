@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from '@/components/ui/toast'
 import { dateToday } from '@/lib/utils'
 
@@ -57,12 +57,10 @@ export function DataTableRowActions<TData>({
       amount: values.amount      
     })
     toast({
-      title: 'Item Updated!',
-      description: 'timestamp: ' + dateToday(new Date()),
-      action: (
-        <ToastAction altText='Okay'>Okay</ToastAction>
-      )
-    })
+      title: "Item Updated!",
+      description: "timestamp: " + dateToday(new Date()),
+      action: <ToastAction altText="Okay">Okay</ToastAction>,
+    });
     setIsLoading(false)
     router.refresh()
   }
