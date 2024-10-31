@@ -41,9 +41,13 @@ export type Material = {
 export type Package = {
   id: string;
   name: string;
-  details: string;
-  amount: number;
-  materials: Material[];
+  price: number;
+  inclusions: string[];
+  cycle: string;
+  startCycle: string;
+  startTime: string;
+  endCycle: string;
+  endTime: string;
 };
 
 export type AdminUser = {

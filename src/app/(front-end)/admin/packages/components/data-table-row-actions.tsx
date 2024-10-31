@@ -309,7 +309,7 @@ export function DataTableRowActions<TData>({
                   </section>
                 </div>
 
-               <AlertDialogFooter>
+                <AlertDialogFooter>
                   <Button className='rounded-xl' type="submit">Save</Button>
                   <AlertDialogCancel className='rounded-xl' onClick={handleCancelEdit}>Cancel</AlertDialogCancel>
                 </AlertDialogFooter>

@@ -29,7 +29,7 @@ import DataTableSearchBar from './DataTableSearchBar'
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  addComponent: React.JSX.Element;
+  addComponent?: React.JSX.Element;
 }
 
 export default function DataTable<TData, TValue>({ columns, data, addComponent: AddComponent }: DataTableProps<TData, TValue>) {
@@ -71,7 +71,7 @@ export default function DataTable<TData, TValue>({ columns, data, addComponent: 
     <div className="space-y-4">
       <div className='flex gap-4 items-center'>
         <DataTableSearchBar table={table} />
-        {AddComponent}
+        {AddComponent !== undefined && AddComponent}
       </div>
       
       <div className="rounded-md border-none ">

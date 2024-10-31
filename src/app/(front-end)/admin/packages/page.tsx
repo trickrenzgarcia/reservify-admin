@@ -14,7 +14,6 @@ export default async function PackagesPage() {
       {/* Sidebar */}
       <Sidebar />
 
-
       <div className='flex-1 overflow-x-auto p-4 lg:px-10'>
         
         <DataTable data={packages} columns={columns} addComponent={<AddPackage />} />

@@ -60,7 +60,7 @@ export default function AddInventory() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button className='rounded-full bg-[#558134]'>Add Inventory</Button>
       </DialogTrigger>
       <DialogContent>
