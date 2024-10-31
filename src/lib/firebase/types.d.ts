@@ -8,7 +8,9 @@ export type FirestoreCollections =
   | "inventory"
   | "venues"
   | "package"
-  | "admin";
+  | "reservations"
+  | "admin"
+  | "permits";
 
 export type User = {
   id: string;
@@ -32,12 +34,6 @@ export type Venue = {
   videos: string[];
 };
 
-export type Material = {
-  id: string;
-  name: string;
-  amount: number;
-};
-
 export type Package = {
   id: string;
   name: string;
@@ -48,6 +44,22 @@ export type Package = {
   startTime: string;
   endCycle: string;
   endTime: string;
+};
+
+export type Reserve = {
+  id: string;
+  reserveId: string;
+  packageId: string;
+  email: string;
+  isPending: boolean;
+};
+
+export type Permit = {
+  id: string;
+  name: string;
+  amount: number;
+  expiredAt: string;
+  updatedAt: string;
 };
 
 export type AdminUser = {
