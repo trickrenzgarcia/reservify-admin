@@ -54,7 +54,6 @@ export default async function Home() {
             </CardContent>
           </Card>
         </div>
-        
       </div>
     </div>
   );

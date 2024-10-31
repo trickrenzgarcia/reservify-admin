@@ -5,6 +5,7 @@ import React from 'react'
 import { columns } from './components/columns';
 import { Inventory, Venue } from '@/lib/firebase/types';
 import ViewVenue from './components/view-venue';
+import AddInventory from './components/add-inventory';
 
 export default async function VenueAndInventory() {
   const inventory = await getCollection<Inventory>("inventory");
@@ -18,7 +19,7 @@ export default async function VenueAndInventory() {
       {/* Content area takes the remaining space */}
       <div className="flex-1 overflow-x-auto p-4 lg:px-10">
         <ViewVenue inventory={inventory} venues={venues} />
-        <DataTable data={inventory} columns={columns} />
+        <DataTable data={inventory} columns={columns} addComponent={<AddInventory />} />
       </div>
     </div>
   )

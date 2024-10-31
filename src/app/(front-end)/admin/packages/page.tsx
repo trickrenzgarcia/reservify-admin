@@ -4,6 +4,7 @@ import { Package } from '@/lib/firebase/types';
 import React from 'react'
 import { columns } from './components/columns';
 import DataTable from '@/components/Interface/DataTable';
+import AddPackage from './components/add-package';
 
 export default async function PackagesPage() {
   const packages = await getCollection<Package>("package");
@@ -16,7 +17,7 @@ export default async function PackagesPage() {
 
       <div className='flex-1 overflow-x-auto p-4 lg:px-10'>
         
-        <DataTable data={packages} columns={columns} />
+        <DataTable data={packages} columns={columns} addComponent={<AddPackage />} />
       </div>
     </div>
   )

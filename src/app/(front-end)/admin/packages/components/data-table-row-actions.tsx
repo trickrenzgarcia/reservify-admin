@@ -62,7 +62,8 @@ export function DataTableRowActions<TData>({
       startTime: pack.startTime,
       startCycle: pack.startCycle,
       endTime: pack.endTime,
-      endCycle: pack.endCycle
+      endCycle: pack.endCycle,
+      cycle: pack.cycle
     },
   });
 
@@ -87,17 +88,18 @@ export function DataTableRowActions<TData>({
   }
 
   async function handleEdit(values: z.infer<typeof packageSchema>) {
-    console.log(values)
     setIsLoading(true);
     setOpen(false);
     await _editDoc("package", values.id, {
+      id: values.id,
       name: values.name,
       price: values.price,
       inclusions: inclusions,
       startTime: values.startTime,
       startCycle: values.startCycle,
       endTime: values.endTime,
-      endCycle: values.endCycle
+      endCycle: values.endCycle,
+      cycle: values.cycle
     });
     toast({
       title: "Item Updated!",
@@ -127,7 +129,7 @@ export function DataTableRowActions<TData>({
           <AlertDialogDescription></AlertDialogDescription>
           <div className="space-y-4">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleEdit)} className="">
+              <form onSubmit={form.handleSubmit(handleEdit)}>
                 <FormField
                   control={form.control}
                   name="name"
