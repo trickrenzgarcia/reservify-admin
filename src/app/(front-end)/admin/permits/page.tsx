@@ -4,8 +4,16 @@ import { getCollection } from '@/lib/firebase/service'
 import { Permit } from '@/lib/firebase/types'
 import React from 'react'
 import { columns } from './components/columns'
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export default async function PermitsPage() {
+  const session = await auth();
+
+  if(!session) {
+    redirect('/login')
+  }
+
   const permits = await getCollection<Permit>("permits")
 
   return (

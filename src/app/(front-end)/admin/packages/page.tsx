@@ -5,8 +5,16 @@ import React from 'react'
 import { columns } from './components/columns';
 import DataTable from '@/components/Interface/DataTable';
 import AddPackage from './components/add-package';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export default async function PackagesPage() {
+  const session = await auth();
+
+  if(!session) {
+    redirect('/login')
+  }
+
   const packages = await getCollection<Package>("package");
 
   return (

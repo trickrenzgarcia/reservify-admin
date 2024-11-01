@@ -9,9 +9,9 @@ import { redirect } from 'next/navigation';
 export default async function Home() {
   const session = await auth();
 
-  // if(!session?.user) {
-  //   redirect('/login');
-  // }
+  if(!session) {
+    redirect('/login');
+  }
 
   const usersCount = await getUsersCount();
   const reservations = await getCollection<Reserve>("reservations")
@@ -20,7 +20,7 @@ export default async function Home() {
     <div className="min-h-[calc(100vh-94px)] flex w-full">
       <Sidebar />
       <div className='flex-1 flex flex-col p-4 lg:p-16'>
-        {session && <HomeHeader name={session.user.name} />}
+        <HomeHeader name={session.user.name} />
         
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <Card className='border-4 border-black rounded-3xl'>

@@ -1,7 +1,15 @@
 import Sidebar from '@/components/Layout/Sidebar'
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 import React from 'react'
 
-export default function ReportsPage() {
+export default async function ReportsPage() {
+  const session = await auth();
+
+  if(!session) {
+    redirect('/login')
+  }
+
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
       <Sidebar />

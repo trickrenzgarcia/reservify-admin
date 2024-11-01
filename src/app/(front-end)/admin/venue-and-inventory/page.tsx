@@ -6,10 +6,17 @@ import { columns } from './components/columns';
 import { Inventory, Venue } from '@/lib/firebase/types';
 import ViewVenue from './components/view-venue';
 import AddInventory from './components/add-inventory';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export default async function VenueAndInventory() {
+  const session = await auth()
   const inventory = await getCollection<Inventory>("inventory");
   const venues = await getCollection<Venue>("venues");
+
+  if(!session) {
+    redirect('/login')
+  }
 
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
