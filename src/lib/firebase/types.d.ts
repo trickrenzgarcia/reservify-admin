@@ -1,3 +1,5 @@
+import type { Timestamp } from "firebase/firestore";
+
 export type Test = {
   id: string;
   projectName: string;
@@ -46,12 +48,26 @@ export type Package = {
   endTime: string;
 };
 
-export type Reserve = {
-  id: string;
-  reserveId: string;
-  packageId: string;
+export type Booking = {
+  bookingId: string;
   email: string;
-  isPending: boolean;
+  phoneNumber: string;
+};
+
+export type CustomPackage = {
+  amenities: string[];
+  chairs: string;
+  equipment: string[];
+  tables: string;
+};
+
+export type Reserve = {
+  bookingData: Booking;
+  customPackageData: CustomPackage;
+  firebaseFormattedDate: Timestamp;
+  packageData: Package;
+  paymentMethod: string;
+  paymentStatus: string;
 };
 
 export type Permit = {
