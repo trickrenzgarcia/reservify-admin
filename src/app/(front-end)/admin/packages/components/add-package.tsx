@@ -54,8 +54,6 @@ export default function AddPackage() {
     }
   })
 
-  console.log(form.formState.errors)
-
   React.useEffect(() => {
     if(!open) {
       handleClose()
