@@ -6,6 +6,7 @@ import React from 'react'
 import { columns } from './components/columns'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import AddPermit from './components/add-permit'
 
 export default async function PermitsPage() {
   const session = await auth();
@@ -20,7 +21,7 @@ export default async function PermitsPage() {
     <div className="min-h-[calc(100vh-94px)] flex w-full">
       <Sidebar />
       <div className='flex-1 overflow-x-auto p-4 lg:px-10'>
-        <DataTable data={permits} columns={columns} />
+        <DataTable data={permits} columns={columns} addComponent={<AddPermit />} />
       </div>
     </div>
   )

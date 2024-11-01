@@ -31,11 +31,14 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { dateToday } from "@/lib/utils";
-import { Trash2 } from 'lucide-react';
+import { cn, dateToday } from "@/lib/utils";
+import { CalendarIcon, Trash2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -56,6 +59,7 @@ export function DataTableRowActions<TData>({
     defaultValues: {
       id: permit.id,
       name: permit.name,
+      amount: permit.amount,
       expiredAt: permit.expiredAt,
       updatedAt: permit.updatedAt
     },
@@ -80,7 +84,7 @@ export function DataTableRowActions<TData>({
       name: values.name,
       amount: values.amount,
       expiredAt: values.expiredAt,
-      updatedAt: values.updatedAt
+      updatedAt: new Date().toString()
     });
     toast({
       title: "Permit Updated!",
@@ -116,7 +120,7 @@ export function DataTableRowActions<TData>({
                   name="name"
                   render={({ field }) => (
                     <FormItem className='mb-4'>
-                      <FormLabel htmlFor="name">Name of the Package:</FormLabel>
+                      <FormLabel htmlFor="name">Name of the permit:</FormLabel>
                       <FormControl>
                         <Input id="name" {...field} />
                       </FormControl>
@@ -130,13 +134,58 @@ export function DataTableRowActions<TData>({
                   name="amount"
                   render={({ field }) => (
                     <FormItem className='mb-4'>
-                      <FormLabel htmlFor="price">Price:</FormLabel>
+                      <FormLabel htmlFor="amount">Amount:</FormLabel>
                       <FormControl>
                         <Input
                           type='number'
-                          id="price"{...field}
+                          id="amount"
+                          onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                          placeholder='Enter the amount'
+                          value={field.value}
                         />
                       </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="expiredAt"
+                  render={({ field }) => (
+                    <FormItem className='flex flex-col'>
+                      <FormLabel htmlFor=''>Expiration Date:</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[280px] justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(new Date(field.value), "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value ? new Date(field.value) : undefined}
+                            onSelect={(date) => field.onChange(date ? date.toISOString() : "")}
+                            disabled={(date) =>
+                              date < new Date()
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

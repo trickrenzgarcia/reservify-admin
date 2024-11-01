@@ -78,7 +78,7 @@ export default function AddPackage() {
 
   async function onSubmit(values: z.infer<typeof PackageFormSchema>) {
     setIsLoading(true)
-    await _addDoc("package", values)
+    await _addDoc("package", {...values, inclusions: inclusions})
     setIsLoading(false)
     setOpen(false)
     toast({

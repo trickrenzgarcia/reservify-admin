@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 import { Permit } from '@/lib/firebase/types'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { formatDate } from '@/lib/utils'
 
 export const columns: ColumnDef<Permit>[] = [
   {
@@ -59,10 +60,12 @@ export const columns: ColumnDef<Permit>[] = [
       <DataTableColumnHeader column={column} title="Expiration" />
     ),
     cell: ({ row }) => {
-
+      
+      const expiredAt = formatDate(row.getValue("expiredAt"))
+      console.log(expiredAt)
       return (
         <div className="flex w-[100px] items-center">
-          {row.getValue("expiredAt")}
+          {expiredAt}
         </div>
       )
     },
