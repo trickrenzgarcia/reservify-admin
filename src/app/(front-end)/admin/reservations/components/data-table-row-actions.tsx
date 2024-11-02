@@ -17,7 +17,7 @@ import {
 import { reservationSchema, Reservation } from "../data/schema";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { _deleteDoc, _editDoc } from "@/lib/firebase/service";
+import { _cancelReservation, _deleteDoc, _editDoc } from "@/lib/firebase/service";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,6 +75,7 @@ export function DataTableRowActions<TData>({
   async function cancelResevation() {
     setIsLoading(true);
     setOpen(false);
+    await _cancelReservation("reservations", reserve.bookingData.bookingId)
     toast({
       title: "Cancelled!",
       description: "timestamp: " + dateToday(new Date()),

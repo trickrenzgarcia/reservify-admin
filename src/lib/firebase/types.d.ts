@@ -12,7 +12,8 @@ export type FirestoreCollections =
   | "package"
   | "reservations"
   | "admin"
-  | "permits";
+  | "permits"
+  | "customer_reviews";
 
 export type User = {
   id: string;
@@ -76,6 +77,18 @@ export type Permit = {
   amount: number;
   expiredAt: string;
   updatedAt: string;
+};
+
+export type CustomerReview = {
+  id: string;
+  customer: {
+    id: string;
+    email: string;
+    name: string;
+  };
+  needToImproves: string[];
+  suggestion: string;
+  rate: number;
 };
 
 export type AdminUser = {

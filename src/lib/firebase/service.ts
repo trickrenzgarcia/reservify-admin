@@ -69,6 +69,32 @@ export async function _deleteDoc(
   }
 }
 
+export async function _cancelReservation(
+  collectionName: FirestoreCollections,
+  bookingId: string
+): Promise<void> {
+  try {
+    const collectionRef = collection(db, collectionName);
+    const q = query(
+      collectionRef,
+      where("bookingData.bookingId", "==", bookingId)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      throw new Error(`No reservation found with booking ID: ${bookingId}`);
+    }
+
+    // Assuming only one document has this bookingId; delete it
+    querySnapshot.forEach(async (docSnapshot) => {
+      await deleteDoc(docSnapshot.ref);
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function _editDoc(
   collectionName: FirestoreCollections,
   docId: string,
