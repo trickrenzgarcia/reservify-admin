@@ -36,6 +36,9 @@ export default function DataAnalytics() {
 
   return (
     <div>
+      <div className='pb-4'>
+        <Button onClick={handleDownloadPDF} className='bg-[#558134] text-lg px-6 py-5 rounded-full'>Download PDF</Button>
+      </div>
       <div ref={chartRef} className='grid grid-cols-1 lg:grid-cols-2  gap-4'>
         <div className='col-span-1 lg:col-span-2 mb-10'>
           <h1 className='text-3xl font-bold'>BoardMart&apos;s Event Place</h1>
@@ -45,7 +48,6 @@ export default function DataAnalytics() {
         <WebVisitorsChart />
         <PackageChartComponent />
       </div>
-      <Button onClick={handleDownloadPDF}>Download PDF</Button>
     </div>
   )
 }
