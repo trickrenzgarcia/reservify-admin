@@ -7,6 +7,7 @@ import {
   deleteDoc,
   updateDoc,
   setDoc,
+  getDoc,
 } from "firebase/firestore";
 import { AdminUser, FirestoreCollections } from "./types";
 import { db } from ".";
@@ -64,6 +65,25 @@ export async function _deleteDoc(
 
   try {
     await deleteDoc(docRef);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getDocById<T>(
+  collectionName: FirestoreCollections,
+  docId: string
+): Promise<T | undefined> {
+  try {
+    const docRef = doc(db, collectionName, docId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data() as T;
+    } else {
+      console.log("No such document!");
+      return undefined;
+    }
   } catch (error) {
     throw error;
   }

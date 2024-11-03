@@ -13,7 +13,8 @@ export type FirestoreCollections =
   | "reservations"
   | "admin"
   | "permits"
-  | "customer_reviews";
+  | "customer_reviews"
+  | "terms_and_conditions";
 
 export type User = {
   id: string;
@@ -69,6 +70,14 @@ export type Reserve = {
   packageData: Omit<Package, "inclusions">;
   paymentMethod: string;
   paymentStatus: string;
+};
+
+export type TermsConditions = {
+  id: string;
+  items: {
+    title: string;
+    body: string;
+  }[];
 };
 
 export type Permit = {

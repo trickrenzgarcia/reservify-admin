@@ -21,4 +21,15 @@ export const reservationSchema = z.object({
   paymentStatus: z.string(),
 });
 
+export const termsConditionSchema = z.object({
+  id: z.string(),
+  items: z
+    .object({
+      title: z.string(),
+      body: z.string().min(1),
+    })
+    .array(),
+});
+
 export type Reservation = z.infer<typeof reservationSchema>;
+export type TermsConditions = z.infer<typeof termsConditionSchema>;

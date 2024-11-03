@@ -15,8 +15,6 @@ export default async function CustomerPreferencesPage() {
 
   const customerReviews = await getCollection<CustomerReview>("customer_reviews")
 
-  console.log(customerReviews)
-
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
       <Sidebar />
