@@ -89,7 +89,7 @@ export function DataTableRowActions<TData>({
 
   async function handleEdit(values: z.infer<typeof packageSchema>) {
     setIsLoading(true);
-    setOpen(false);
+    
     await _editDoc("package", values.id, {
       id: values.id,
       name: values.name,
@@ -106,6 +106,7 @@ export function DataTableRowActions<TData>({
       description: "timestamp: " + dateToday(new Date()),
       action: <ToastAction altText="Okay">Okay</ToastAction>,
     });
+    setOpen(false);
     setIsLoading(false);
     router.refresh();
   }

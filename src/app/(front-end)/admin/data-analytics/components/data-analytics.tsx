@@ -39,14 +39,23 @@ export default function DataAnalytics() {
       <div className='pb-4'>
         <Button onClick={handleDownloadPDF} className='bg-[#558134] text-lg px-6 py-5 rounded-full'>Download PDF</Button>
       </div>
-      <div ref={chartRef} className='grid grid-cols-1 lg:grid-cols-2  gap-4'>
-        <div className='col-span-1 lg:col-span-2 mb-10'>
+      <div ref={chartRef} className='grid grid-cols-1 lg:grid-cols-12  gap-4'>
+        <div className='col-span-12 lg:col-span-12 mb-10'>
           <h1 className='text-3xl font-bold'>BoardMart&apos;s Event Place</h1>
           <h2 className='text-lg'>Date: {new Date().toLocaleDateString('en-PH')}</h2>
         </div>
-        <BarChartComponent />
-        <WebVisitorsChart />
-        <PackageChartComponent />
+        <div className='col-span-12 lg:col-span-5'>
+          <h1></h1>
+        </div>
+        <div className='col-span-12 lg:col-span-7'>
+          <BarChartComponent />
+        </div>
+        <div className='col-span-12 lg:col-span-5'>
+          <WebVisitorsChart />
+        </div>
+        <div className='col-span-12 lg:col-span-7'>
+          <PackageChartComponent />
+        </div>
       </div>
     </div>
   )
