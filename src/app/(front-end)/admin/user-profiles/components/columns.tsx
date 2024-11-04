@@ -22,7 +22,7 @@ export const columns: ColumnDef<User>[] = [
           <Dialog>
             <DialogTrigger asChild>
               <span className="max-w-[500px] truncate font-medium hover:text-blue-600 hover:cursor-pointer">
-                {row.getValue("name")}
+                {user.name ? user.name : `${user.firstname} ${user.lastname}` }
               </span>
             </DialogTrigger>
             <DialogContent>
@@ -31,9 +31,25 @@ export const columns: ColumnDef<User>[] = [
                 <span className="font-bold">ID</span>
                 <span>{user.id}</span>
                 <span className="font-bold">Name</span>
-                <span>{user.name}</span>
-                <span className="font-bold">Email</span>
-                <span>{user.email}</span>
+                <span>{user.name ? user.name : `${user.firstname} ${user.lastname}`}</span>
+                {user.gender && (
+                  <>
+                    <span className="font-bold">Gender</span>
+                    <span>{user.gender}</span>
+                  </>
+                )}
+                {user.idType && (
+                  <>
+                    <span className="font-bold">ID Submitted</span>
+                    <span>{user.idType}</span>
+                  </>
+                )}
+                {user.phoneNumber && (
+                  <>
+                    <span className="font-bold">Phone Number</span>
+                    <span>{user.phoneNumber}</span>
+                  </>
+                )}
               </div>
             </DialogContent>
           </Dialog>

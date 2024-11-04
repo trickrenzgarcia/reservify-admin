@@ -10,6 +10,9 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { dateToday } from '@/lib/utils'
+import { ToastAction } from '@/components/ui/toast'
+import { useToast } from '@/hooks/use-toast'
 
 
 interface DataTableRowActionsProps<TData> {
@@ -23,9 +26,10 @@ export function DataTableRowActions<TData>({
   const user = userSchema.parse(row.original)
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [userDetails, setUserDetails] = React.useState({
-    name: user.name,
-    email: user.email
+    name: user.name ? user.name : `${user.firstname} ${user.lastname}`,
+    email: user.email,
   })
+  const { toast } = useToast()
 
   async function handleDeleteUser() {
     setIsLoading(true)
@@ -42,6 +46,11 @@ export function DataTableRowActions<TData>({
       name: userDetails.name,
       email: userDetails.email,
     })
+    toast({
+      title: "Updated!",
+      description: "timestamp: " + dateToday(new Date()),
+      action: <ToastAction altText="Okay">Okay</ToastAction>,
+    });
     setIsLoading(false)
     router.refresh();
   }

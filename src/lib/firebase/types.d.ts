@@ -20,6 +20,13 @@ export type User = {
   id: string;
   email: string;
   name: string;
+  firstname: string;
+  lastname: string;
+  gender: string;
+  idType: string;
+  phoneNumber: string;
+  username: string;
+  capturedImage: string;
 };
 
 export type Inventory = {
