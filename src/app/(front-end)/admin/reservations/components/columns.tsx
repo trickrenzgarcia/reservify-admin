@@ -27,7 +27,7 @@ export const columns: ColumnDef<Reserve>[] = [
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Details</DialogTitle>
+                <DialogTitle>Reservation Details</DialogTitle>
                 <DialogDescription></DialogDescription>
               </DialogHeader>
               <div className="flex gap-2">
@@ -42,11 +42,35 @@ export const columns: ColumnDef<Reserve>[] = [
                 <span className="font-bold">Package: </span>
                 <span>{reserve.packageData.name}</span>
               </div>
+              <div className="flex gap-2 ml-4">
+                <span className="font-bold">Amenities: </span>
+                <span>{reserve.customPackageData.amenities.map((v, i) => (
+                  <p key={v+i}>{v}</p>
+                ))}</span>
+              </div>
+              <div className="flex gap-2 ml-4">
+                <span className="font-bold">Equipments: </span>
+                <span>{reserve.customPackageData.equipment.map((v, i) => (
+                  <p key={v+i}>{v}</p>
+                ))}</span>
+              </div>
+              <div className="flex gap-2 ml-4">
+                <span className="font-bold">Chairs: </span>
+                <span>{reserve.customPackageData.chairs}</span>
+              </div>
+              <div className="flex gap-2 ml-4">
+                <span className="font-bold">Tables: </span>
+                <span>{reserve.customPackageData.tables}</span>
+              </div>
+              
               <div className="flex gap-2">
                 <span className="font-bold">Time: </span>
                 <span>{`${reserve.packageData.startTime} ${reserve.packageData.startCycle} - ${reserve.packageData.endTime} ${reserve.packageData.endCycle}`}</span>
               </div>
-              
+              <div className="flex gap-2">
+                <span className="font-bold">Payment Method: </span>
+                <span>{`${reserve.paymentMethod} (${reserve.paymentStatus})`}</span>
+              </div>
               <DialogClose>Close</DialogClose>
             </DialogContent>
           </Dialog>
@@ -98,6 +122,23 @@ export const columns: ColumnDef<Reserve>[] = [
       return (
         <div className="flex w-[100px] items-center">
           {row.original.packageData.startTime} {row.original.packageData.startCycle} to {row.original.packageData.endTime} {row.original.packageData.endCycle}
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "paymentStatus",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+
+      return (
+        <div className="flex w-[100px] items-center">
+          {row.original.paymentStatus}
         </div>
       )
     },

@@ -90,13 +90,13 @@ export function DataTableRowActions<TData>({
     <div className="flex gap-4 max-h-screen">
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
-          <Button
+          {/* <Button
             className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-blue-600"
             disabled={isLoading}
             size="responsive"
           >
             Edit
-          </Button>
+          </Button> */}
         </AlertDialogTrigger>
         <AlertDialogContent >
           <AlertDialogHeader>
