@@ -22,28 +22,28 @@ export const description = "A bar chart with an active bar"
 
 const chartData = [
   { 
-    package: "pack1", 
+    package: "Small Group", 
     star1: 5, 
-    star2: 10, 
-    star3: 6, 
-    star4: 20, 
-    star5: 40, 
+    star2: 4, 
+    star3: 12, 
+    star4: 6, 
+    star5: 4, 
   },
   { 
-    package: "pack2", 
+    package: "Large Group", 
     star1: 8, 
-    star2: 12,
+    star2: 3,
     star3: 6, 
-    star4: 20, 
-    star5: 40, 
+    star4: 7, 
+    star5: 16, 
   },
   { 
-    package: "pack3",  
+    package: "Exclusive Pack",  
     star1: 3, 
     star2: 8, 
     star3: 6, 
-    star4: 20, 
-    star5: 40, 
+    star4: 4, 
+    star5: 2, 
   },
 ]
 
