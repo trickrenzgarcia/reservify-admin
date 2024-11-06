@@ -285,8 +285,8 @@ export default function AddPackage() {
             </div>
 
             <DialogFooter>
-              <Button className='rounded-xl' type="submit">Save</Button>
-              <Button className='rounded-xl' type='button' onClick={handleClose} variant='destructive'>Cancel</Button>
+              <Button className='rounded-xl' type="submit" disabled={isLoading}>Save</Button>
+              <Button className='rounded-xl' type='button' onClick={handleClose} disabled={isLoading} variant='destructive'>Cancel</Button>
             </DialogFooter>
           </form>
         </Form>
