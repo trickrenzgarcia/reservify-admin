@@ -2,6 +2,7 @@ import Sidebar from '@/components/Layout/Sidebar'
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import React from 'react'
+import ReportsData from './components/ReportsData';
 
 export default async function ReportsPage() {
   const session = await auth();
@@ -13,9 +14,8 @@ export default async function ReportsPage() {
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
       <Sidebar />
-      <div className='flex-1 flex flex-col p-4 lg:p-16'>
-        
-        
+      <div className='flex-1 overflow-x-auto p-4 lg:px-10'>
+        <ReportsData />
       </div>
     </div>
   )
