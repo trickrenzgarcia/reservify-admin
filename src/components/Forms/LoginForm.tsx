@@ -19,6 +19,7 @@ const LoginFormSchema = z.object({
 
 export default function LoginForm() {
   const [loading, setLoading] = React.useState(false)
+  const [invalidCredentials, setInvalidCredentials] = React.useState(false);
   const { toast } = useToast()
 
   const form = useForm({
@@ -32,13 +33,16 @@ export default function LoginForm() {
   async function onSubmit(values: z.infer<typeof LoginFormSchema>) {
     setLoading(true)
 
-    // Simulate a 2 second delay
     const user = await signIn('credentials', {
       email: values.email,
-      password: values.password
+      password: values.password,
+      redirect: false
     })
 
     if(user?.error) {
+      setInvalidCredentials(true); // Set error state if login fails
+      form.setError('email', { message: 'Invalid Credentials' }, { shouldFocus: true })
+      form.setError('password', { message: 'Invalid Credentials' }, { shouldFocus: true })
       toast({
         title: 'Error',
         description: 'Invalid email or password',
@@ -64,42 +68,42 @@ export default function LoginForm() {
               </p>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex flex-col">
-                  <FormField
-                    control={form.control}
-                    name='email'
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <FormLabel htmlFor='email'>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            id='email'
-                            type="email"
-                            className="w-full"
-                            disabled={loading}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='password'
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <FormLabel htmlFor='password'>Password</FormLabel>
-                        <FormControl>
-                          <Input
-                            id='password'
-                            type="password"
-                            className="w-full"
-                            disabled={loading}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="email">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="email"
+                          type="email"
+                          className={`w-full ${invalidCredentials ? 'border-red-500' : ''}`}
+                          disabled={loading}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          id="password"
+                          type="password"
+                          className={`w-full ${invalidCredentials ? 'border-red-500' : ''}`}
+                          disabled={loading}
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
                   <Button 
                     type='submit' 
                     className="text-sm px-6 self-center rounded-full w-fit bg-zinc-900 text-white hover:bg-gray-700"
