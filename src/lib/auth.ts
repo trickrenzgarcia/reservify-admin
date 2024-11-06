@@ -34,8 +34,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async authorized({ auth }) {
       return !!auth;
     },
-    redirect(params) {
-      return "/";
+    async redirect({ url, baseUrl }) {
+      // Redirect to /admin by default after login
+      if (url === baseUrl || url === `${baseUrl}/`) {
+        return `${baseUrl}/admin`;
+      }
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+
+      // Allows callback URLs on the same origin
+      if (new URL(url).origin === baseUrl) return url;
+
+      return baseUrl;
     },
   },
   session: {

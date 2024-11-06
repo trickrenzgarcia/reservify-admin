@@ -11,6 +11,7 @@ import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { signIn } from 'next-auth/react';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const LoginFormSchema = z.object({
   email: z.string().email(),
@@ -21,6 +22,7 @@ export default function LoginForm() {
   const [loading, setLoading] = React.useState(false)
   const [invalidCredentials, setInvalidCredentials] = React.useState(false);
   const { toast } = useToast()
+  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(LoginFormSchema),
@@ -39,6 +41,8 @@ export default function LoginForm() {
       redirect: false
     })
 
+    setLoading(false)
+
     if(user?.error) {
       setInvalidCredentials(true); // Set error state if login fails
       form.setError('email', { message: 'Invalid Credentials' }, { shouldFocus: true })
@@ -48,9 +52,10 @@ export default function LoginForm() {
         description: 'Invalid email or password',
         variant: 'destructive'
       })
+    } else {
+      setInvalidCredentials(false);
+      router.push('/admin')
     }
-
-    setLoading(false)
   }
 
   return (
@@ -78,7 +83,7 @@ export default function LoginForm() {
                         <Input
                           id="email"
                           type="email"
-                          className={`w-full ${invalidCredentials ? 'border-red-500' : ''}`}
+                          className={`w-full ${invalidCredentials ? 'border-red-500 focus-visible:ring-red-400' : ''}`}
                           disabled={loading}
                           {...field}
                         />
@@ -96,7 +101,7 @@ export default function LoginForm() {
                         <Input
                           id="password"
                           type="password"
-                          className={`w-full ${invalidCredentials ? 'border-red-500' : ''}`}
+                          className={`w-full ${invalidCredentials ? 'border-red-500 focus-visible:ring-red-400' : ''}`}
                           disabled={loading}
                           {...field}
                         />
