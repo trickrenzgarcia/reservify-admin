@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 import { storage } from '@/lib/firebase'
-import { _editDoc } from '@/lib/firebase/service'
+import { _deleteDoc, _editDoc } from '@/lib/firebase/service'
 import { Inventory, Venue } from '@/lib/firebase/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
@@ -20,6 +20,10 @@ import React, { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import AddVenueForm from './add-venue'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { ToastAction } from '@/components/ui/toast'
+import { dateToday } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
 
 type ViewVenueProps = {
   inventory: Inventory[],
@@ -43,6 +47,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
   const [selectedVenue, setSelectedVenue] = React.useState<Venue | undefined>(undefined)
   const [thumbnail, setThumbnail] = React.useState<string | undefined>(undefined)
   const fileRef = useRef<HTMLInputElement | null>(null)
+  const { toast } = useToast()
 
   const form = useForm<z.infer<typeof VenueFormSchema>>({
     resolver: zodResolver(VenueFormSchema),
@@ -122,6 +127,23 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
     });
   }
 
+  async function handleDeleteVenue() {
+    setIsLoading(true)
+    if(!selectedVenue) {
+      setIsLoading(false)
+      return;
+    };
+    await _deleteDoc("venues", selectedVenue.id)
+    toast({
+      title: "Venue has been removed!",
+      description: "timestamp: " + dateToday(new Date()),
+      variant: 'destructive',
+      action: <ToastAction altText="Okay">Okay</ToastAction>,
+    });
+    setIsLoading(false)
+    router.refresh()
+  }
+
   async function onSubmit(values: z.infer<typeof VenueFormSchema>) {
     setIsLoading(true)
     let tempThumbnail = values.thumbnail;
@@ -159,8 +181,11 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
     form.reset()
     setSelectedVenue(undefined)
     setThumbnail(undefined)
-    setOpen(false)
-
+    toast({
+      title: "Venue has been edited!",
+      description: "timestamp: " + dateToday(new Date()),
+      action: <ToastAction altText="Okay">Okay</ToastAction>,
+    });
   }
 
   return (
@@ -184,13 +209,13 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                   )}
                   <h1 className='text-3xl font-bold '>{isAddVenue ? 'Add Venue' : 'Edit Venue Details'}</h1>
                 </div>
-                <Button className='rounded-full font-bold' onClick={() => {
+                <Button className='rounded-full font-bold' disabled={isLoading} onClick={() => {
                   setIsAddVenue(true)
                 }}>
                   <Plus size={18}/> Add Venue
                 </Button>
               </div>
-              <ScrollArea className='h-[600px]'>
+              <ScrollArea className='h-[600px] pr-4'>
                 {!selectedVenue && !isAddVenue ? (
                   <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                     {venues.map((venue) => (
@@ -246,6 +271,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                                   <Input
                                     {...field}
                                     id='title'
+                                    disabled={isLoading}
                                     placeholder='Venue Title'
                                   />
                                 </FormControl>
@@ -269,6 +295,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                                     {...field}
                                     id='description'
                                     placeholder='Venue Description'
+                                    disabled={isLoading}
                                     rows={6}
                                   />
                                 </FormControl>
@@ -276,15 +303,36 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                               </FormItem>
                             )}
                           />
-                          <div className='lg:flex w-full gap-3 hidden'>
-                            <Button className='px-10 rounded-full font-semibold' type='submit' variant='default'>Save</Button>
-                            <Button 
-                              className='px-8 rounded-full font-semibold hover:bg-red-500 hover:text-primary-foreground'
-                              type='button' variant='ghost'
-                              onClick={handleCancelSelectedVenue}
-                            >
-                                Cancel
-                            </Button>
+                          <div className='lg:flex w-full hidden justify-between'>
+                            <div className="flex gap-3">
+                              <Button className='px-10 rounded-full font-semibold' type='submit' variant='default' disabled={isLoading}>Save</Button>
+                              <Button 
+                                className='px-8 rounded-full font-semibold hover:bg-red-500 hover:text-primary-foreground'
+                                type='button' variant='ghost'
+                                onClick={handleCancelSelectedVenue}
+                                disabled={isLoading}
+                              >
+                                  Cancel
+                              </Button>
+                            </div>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button type='button' className='rounded-full font-semibold' variant='destructive' disabled={isLoading}
+                                >REMOVE THIS VENUE</Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the venue to the server.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction className='bg-red-500' onClick={handleDeleteVenue}>Yes</AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </div>
                         <div>
@@ -335,6 +383,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                                 onChange={handleThumbnailOnChange}
                                 type='file'
                                 accept='image/*'
+                                disabled={isLoading}
                               />
                             </div>
                           </div>
@@ -344,6 +393,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                               <Button
                                 className='rounded-full text-sm bg-teal-500'
                                 type='button'
+                                disabled={isLoading}
                                 onClick={() => {
                                 fileRef.current?.click()
                               }}>Add Photo</Button>
@@ -393,7 +443,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                             type='submit' variant='default'
                             disabled={isLoading}
                           >
-                            {isLoading ? <>L</> && 'Saving...' : 'Save'}
+                            {isLoading ? <>.</> && 'Saving...' : 'Save'}
                           </Button>
                           <Button 
                             className='px-8 rounded-full font-semibold hover:bg-red-500 hover:text-primary-foreground'
@@ -403,6 +453,7 @@ export default function ViewVenue({ inventory, venues }: ViewVenueProps) {
                           >
                               Cancel
                           </Button>
+                          
                         </div>
                       </form>
                     </Form>
