@@ -13,15 +13,27 @@ import { useToast } from '@/hooks/use-toast'
 import { dateToday } from '@/lib/utils'
 import { ToastAction } from '@/components/ui/toast'
 import { useRouter } from 'next/navigation'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const InventoryFormSchema = z.object({
   name: z.string().min(1),
-  quantity: z.number().refine((val) => val >= 0, {
-    message: "Quantity should be greater than or equal to 0",
+  quantity: z.number().refine((val) => val >= 1, {
+    message: "Quantity should be greater than or equal to 1.00",
   }),
-  amount: z.number().refine((val) => val >= 0, {
-    message: "Amount should be greater than or equal to 0",
+  amount: z.number().refine((val) => val >= 1, {
+    message: "Amount should be greater than or equal to 1",
   }),
+  type: z.enum(['amenities', 'audio-visual', 'seating'], {
+    message: 'Invalid Type'
+  })
 })
 
 export default function AddInventory() {
@@ -79,7 +91,7 @@ export default function AddInventory() {
                 <FormItem>
                   <FormLabel htmlFor='name'>Name:</FormLabel>
                   <FormControl>
-                    <Input id='name' {...field} placeholder='Enter name of item' />
+                    <Input id='name' {...field} placeholder='Enter name of item' disabled={isLoading} />
                   </FormControl>
                 </FormItem>
               )}
@@ -96,6 +108,7 @@ export default function AddInventory() {
                       {...field}
                       type="number"
                       placeholder='Enter amount'
+                      disabled={isLoading}
                       onChange={(e) => field.onChange(parseFloat(e.target.value))} // Convert to number
                     />
                   </FormControl>
@@ -114,16 +127,44 @@ export default function AddInventory() {
                       {...field}
                       placeholder='Enter quantity'
                       type='number'
+                      disabled={isLoading}
                       onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
                     />
                   </FormControl>
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name='type'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Add-ons Type:</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                    <FormControl>
+                      <SelectTrigger className="w-[220px]">
+                        <SelectValue placeholder="Select Add-ons Type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Add-ons</SelectLabel>
+                        <SelectItem value="amenities">Amenities</SelectItem>
+                        <SelectItem value="audio-visual">Audio-Visual Equipment</SelectItem>
+                        <SelectItem value="seating">Seating</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+
             <DialogFooter className='mt-4 flex gap-2'>
-              <Button type='submit' className='rounded-xl'>Save</Button>
+              <Button type='submit' className='rounded-xl' disabled={isLoading}>Save</Button>
               <Button type='button' className='rounded-xl' variant='destructive'
                 onClick={handleClose}
+                disabled={isLoading}
               >Close</Button>
             </DialogFooter>
           </form>

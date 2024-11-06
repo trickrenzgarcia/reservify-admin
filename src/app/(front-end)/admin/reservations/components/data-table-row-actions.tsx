@@ -46,6 +46,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const router = useRouter();
   const reserve = reservationSchema.parse(row.original);
+  const isPaid = reserve.paymentStatus.toLowerCase().startsWith('paid');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
   const { toast } = useToast();
@@ -76,14 +77,25 @@ export function DataTableRowActions<TData>({
     setIsLoading(true);
     setOpen(false);
     await _cancelReservation("reservations", reserve.bookingData.bookingId)
+    .catch(() => {
+      toast({
+        title: "Internal Server Error!",
+        description: "An error occurred, please refresh the page.",
+        action: <ToastAction altText="Okay">Okay</ToastAction>,
+        variant: 'destructive'
+      });
+    }).finally(() => {
+      setIsLoading(false);
+      router.refresh();
+      location.reload()
+    })
     toast({
       title: "Cancelled!",
       description: "timestamp: " + dateToday(new Date()),
       action: <ToastAction altText="Okay">Okay</ToastAction>,
       variant: 'destructive'
     });
-    setIsLoading(false);
-    router.refresh();
+    
   }
 
   return (
@@ -118,17 +130,19 @@ export function DataTableRowActions<TData>({
 
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button
-            className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-red-600"
-            disabled={isLoading}
-            size="responsive"
-          >
-            Cancel
-          </Button>
+          {!isPaid && (
+            <Button
+              className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-red-600"
+              disabled={isLoading}
+              size="responsive"
+            >
+              Cancel
+            </Button>
+          )}
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>{!isPaid ? 'Are you absolutely sure?' : 'Do you want to refund this reserve pack?'}</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. Canceling this reservation from this email {"<"}<span className='text-red-500'>{reserve.bookingData.email}</span>{">"}
             </AlertDialogDescription>

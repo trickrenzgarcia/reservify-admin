@@ -40,6 +40,8 @@ export async function getCollection<T>(collectionName: FirestoreCollections) {
   }
 }
 
+export async function getPaidCustomers() {}
+
 export async function _addDoc(
   collectionName: FirestoreCollections,
   data: Omit<Partial<any>, "id">

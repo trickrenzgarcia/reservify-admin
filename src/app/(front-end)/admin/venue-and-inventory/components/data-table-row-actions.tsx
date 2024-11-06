@@ -17,6 +17,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from '@/components/ui/toast'
 import { dateToday } from '@/lib/utils'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -37,7 +46,8 @@ export function DataTableRowActions<TData>({
       id: inventory.id,
       amount: inventory.amount,
       quantity: inventory.quantity,
-      name: inventory.name
+      name: inventory.name,
+      type: inventory.type
     }
   })
 
@@ -54,7 +64,8 @@ export function DataTableRowActions<TData>({
     await _editDoc("inventory", values.id, {
       name: values.name,
       quantity: values.quantity,
-      amount: values.amount      
+      amount: values.amount,
+      type: values.type
     })
     toast({
       title: "Item Updated!",
@@ -78,7 +89,7 @@ export function DataTableRowActions<TData>({
             <AlertDialogTitle>Edit Item</AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogDescription>
-            Edit user details
+            Edit this item
           </AlertDialogDescription>
           <div className='space-y-4'>
             <Form {...form}>
@@ -92,7 +103,7 @@ export function DataTableRowActions<TData>({
                     <FormItem>
                       <FormLabel htmlFor='name'>Name of the item:</FormLabel>
                       <FormControl>
-                        <Input id='name' {...field} />
+                        <Input id='name' {...field} disabled={isLoading} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -108,6 +119,7 @@ export function DataTableRowActions<TData>({
                           id='quantity'
                           {...field}
                           type="number"
+                          disabled={isLoading}
                           onChange={(e) => field.onChange(parseInt(e.target.value, 10))} // Convert to number
                         />
                       </FormControl>
@@ -126,10 +138,35 @@ export function DataTableRowActions<TData>({
                           id='amount'
                           {...field}
                           type="number"
+                          disabled={isLoading}
                           onChange={(e) => field.onChange(parseInt(e.target.value, 10))} // Convert to number
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='type'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Add-ons Type:</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading}>
+                        <FormControl>
+                          <SelectTrigger className="w-[220px]">
+                            <SelectValue placeholder="Select Add-ons Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Add-ons</SelectLabel>
+                            <SelectItem value="amenities">Amenities</SelectItem>
+                            <SelectItem value="audio-visual">Audio-Visual Equipment</SelectItem>
+                            <SelectItem value="seating">Seating</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormItem>
                   )}
                 />

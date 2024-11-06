@@ -32,6 +32,7 @@ export type User = {
 export type Inventory = {
   id: string;
   name: string;
+  type: "amenities" | "audio-visual" | "seating";
   quantity: number;
   amount: number;
 };

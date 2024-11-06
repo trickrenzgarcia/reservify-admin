@@ -78,6 +78,23 @@ export const columns: ColumnDef<Inventory>[] = [
     },
   },
   {
+    accessorKey: "type",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
+    cell: ({ row }) => {
+      const type = row.getValue("type") as string;
+      return (
+        <div className="flex w-[100px] items-center">
+          {type === 'amenities' ? 'Amenities' : type === 'audio-visual' ? 'Audio-Visual' : 'Seating'}
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },

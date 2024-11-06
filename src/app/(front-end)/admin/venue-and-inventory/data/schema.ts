@@ -11,6 +11,9 @@ export const inventorySchema = z.object({
   amount: z.number().refine((val) => val >= 0, {
     message: "Amount should be greater than or equal to 0",
   }),
+  type: z.enum(["amenities", "audio-visual", "seating"], {
+    message: "Invalid Type",
+  }),
 });
 
 export type Inventory = z.infer<typeof inventorySchema>;

@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import React from 'react'
+import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 
 const data = [
@@ -13,13 +13,20 @@ const data = [
 ]
 
 export default function ReportsData() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Filter data based on searchQuery
+  const filteredData = data.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <div className='w-full flex flex-col gap-10'>
       <div>
-        <SearchBar />
+        <SearchBar onSearch={(query) => setSearchQuery(query)} />
       </div>
       <div className='flex flex-col gap-8'>
-        {data.map((value, index) => (
+        {filteredData.map((value, index) => (
           <div key={value.name+index} className='flex justify-evenly'>
             <div className='w-1/2'>
               <h2 className='text-center text-lg font-semibold'>{value.name}</h2>

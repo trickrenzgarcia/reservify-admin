@@ -1,5 +1,7 @@
+import DataTable from '@/components/Interface/DataTable';
 import Sidebar from '@/components/Layout/Sidebar'
 import { auth } from '@/lib/auth';
+import { getCollection } from '@/lib/firebase/service';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
@@ -15,7 +17,7 @@ export default async function PaymentsPage() {
       <Sidebar />
       <div className='flex-1 flex flex-col p-4 lg:p-16'>
         
-        
+        {/* <DataTable data={} columns={} /> */}
       </div>
     </div>
   )
