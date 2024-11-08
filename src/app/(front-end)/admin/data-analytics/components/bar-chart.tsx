@@ -34,8 +34,8 @@ const chartConfig = {
 
 
 export default function BarChartComponent({ payments }: { payments: Payment[] }) {
-   // Specify the target month (e.g., "Oct" for October)
-   const targetMonth = "Nov"; // Example: this can be dynamic or hardcoded for now
+  const currentMonth = new Date().toLocaleString("default", { month: "long" });
+   const targetMonth = new Date().toLocaleString("default", { month: "short" });
    const { chartData, totalAmount, totalFee, totalNetAmount, paidPaymentsCount } = calculatePaymentsSummary(payments, targetMonth);
 
    return (
@@ -102,7 +102,7 @@ export default function BarChartComponent({ payments }: { payments: Payment[] })
           {/* Optional growth indicator */}
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total revenues for {targetMonth}
+          Showing total revenues for {currentMonth}
         </div>
       </CardFooter>
     </Card>
