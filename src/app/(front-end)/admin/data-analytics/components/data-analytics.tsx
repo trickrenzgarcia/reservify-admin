@@ -7,8 +7,9 @@ import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { WebVisitorsChart } from './web-visitors';
 import { PackageChartComponent } from './package-chart';
+import { Payment } from '../../payments/data/payment';
 
-export default function DataAnalytics() {
+export default function DataAnalytics({ payments }: { payments: Payment[] }) {
   const chartRef = React.useRef<HTMLDivElement>(null)
   
   async function handleDownloadPDF() {
@@ -48,7 +49,7 @@ export default function DataAnalytics() {
           <h1></h1>
         </div>
         <div className='col-span-12 lg:col-span-7'>
-          <BarChartComponent />
+          <BarChartComponent payments={payments}/>
         </div>
         <div className='col-span-12 lg:col-span-5'>
           <WebVisitorsChart />

@@ -16,16 +16,11 @@ import {
 } from "@/components/ui/chart"
 import React from 'react'
 import { TrendingUp } from 'lucide-react'
+import { Payment } from '../../payments/data/payment'
+import { calculatePaymentsSummary, formatCurrency } from '../calculator'
+
 export const description = "A stacked bar chart with a legend"
 
-const chartData = [
-  { month: "May", sales: 450 },
-  { month: "June", sales: 380},
-  { month: "July", sales: 520},
-  { month: "August", sales: 140},
-  { month: "September", sales: 600},
-  { month: "October", sales: 480},
-]
 const chartConfig = {
   sales: {
     label: "Sales",
@@ -38,16 +33,20 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
-export default function BarChartComponent() {
-  return (
-    <Card className='shadow-none'>
+export default function BarChartComponent({ payments }: { payments: Payment[] }) {
+   // Specify the target month (e.g., "Oct" for October)
+   const targetMonth = "Nov"; // Example: this can be dynamic or hardcoded for now
+   const { chartData, totalAmount, totalFee, totalNetAmount, paidPaymentsCount } = calculatePaymentsSummary(payments, targetMonth);
+
+   return (
+    <Card className="shadow-none">
       <CardHeader>
-        <CardTitle>Total Sales</CardTitle>
+        <CardTitle>Total Sales for {targetMonth}</CardTitle>
         <CardDescription>
-          Sales Report: 6 months
+          Sales Report for {targetMonth}
         </CardDescription>
       </CardHeader>
-      <CardContent className='shadow-none'>
+      <CardContent className="shadow-none">
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <XAxis
@@ -55,7 +54,7 @@ export default function BarChartComponent() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 3)} // Abbreviate month
             />
             <Bar
               dataKey="sales"
@@ -78,50 +77,34 @@ export default function BarChartComponent() {
                     <>
                       <div
                         className="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-[--color-bg]"
-                        style={
-                          {
-                            "--color-bg": `var(--color-${name})`,
-                          } as React.CSSProperties
-                        }
+                        style={{
+                          "--color-bg": `var(--color-${name})`,
+                        } as React.CSSProperties}
                       />
-                      {chartConfig[name as keyof typeof chartConfig]?.label ||
-                        name}
+                      {chartConfig[name as keyof typeof chartConfig]?.label || name}
                       <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                        {value}
+                        {formatCurrency(value as number)}
                         <span className="font-normal text-muted-foreground">
                           PHP
                         </span>
                       </div>
-                      {/* Add this after the last item */}
-                      {index === 1 && (
-                        <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
-                          Total
-                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
-                            {item.payload.sales}
-                            <span className="font-normal text-muted-foreground">
-                              PHP
-                            </span>
-                          </div>
-                        </div>
-                      )}
                     </>
                   )}
                 />
               }
               cursor={false}
-              defaultIndex={1}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          {/* Growth up by {"5.2%"} this month <TrendingUp className="h-4 w-4" /> */}
+          {/* Optional growth indicator */}
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total revenues for the last 6 months
+          Showing total revenues for {targetMonth}
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }

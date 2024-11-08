@@ -96,14 +96,11 @@ export type Permit = {
 
 export type CustomerReview = {
   id: string;
-  customer: {
-    id: string;
-    email: string;
-    name: string;
-  };
-  needToImproves: string[];
+  email: string;
+  name: string;
+  rating: number;
+  selectedTags: string[];
   suggestion: string;
-  rate: number;
 };
 
 export type CustomerService = {

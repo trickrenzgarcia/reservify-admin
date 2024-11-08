@@ -3,7 +3,7 @@ import TableComponent from './TableComponent';
 
 async function getAllPayments(): Promise<Payment[]> {
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  const response = await fetch('https://api.paymongo.com/v1/payments', {
+  const response = await fetch('https://api.paymongo.com/v1/payments?limit=100', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
