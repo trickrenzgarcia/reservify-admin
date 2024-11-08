@@ -1,8 +1,8 @@
 import React from 'react'
 import { Payment } from '../data/payment';
+import PaymentDetail from './PaymentDetail';
 
 async function getPaymentDetail(id: string): Promise<Payment> {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   const response = await fetch(`https://api.paymongo.com/v1/payments/${id}`, {
     method: 'GET',
     headers: {
@@ -14,12 +14,11 @@ async function getPaymentDetail(id: string): Promise<Payment> {
     }
   })
   const data = await response.json()
-  return data
+  return data.data as Payment
 
 }
 
-export default function PaymentData() {
-  return (
-    <div>PaymentData</div>
-  )
+export default async function PaymentData({ paymentId }: { paymentId: string }) {
+  const payment = await getPaymentDetail(paymentId)
+  return <PaymentDetail payment={payment} />
 }

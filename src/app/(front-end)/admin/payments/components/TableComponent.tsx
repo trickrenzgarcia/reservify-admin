@@ -89,7 +89,7 @@ export default function TableComponent({ payments }: Props) {
                       }).format(pay.attributes.amount / 100)}
                     </TableCell>
                     <TableCell className='p-4 text-gray-600 hidden lg:block'>
-                      {new Date(pay.attributes.created_at * 1000).toLocaleString("en-US", {
+                      {new Date(pay.attributes.created_at * 1000).toLocaleString("en-PH", {
                         month: "long",
                         day: "numeric",
                         year: "numeric",
