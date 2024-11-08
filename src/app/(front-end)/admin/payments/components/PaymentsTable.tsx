@@ -1,7 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Payment, ResponsePayment } from '../data/payment';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Link from 'next/link';
 import TableComponent from './TableComponent';
 
 async function getAllPayments(): Promise<Payment[]> {

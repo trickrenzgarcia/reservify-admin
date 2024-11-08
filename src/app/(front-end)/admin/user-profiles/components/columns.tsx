@@ -18,16 +18,12 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const user = row.original;
-      let name: string[];
-      if(user.name) {
-        name = user.name.split(' ')
-      }     
       return (
         <div className="flex space-x-2">
           <Dialog>
             <DialogTrigger asChild>
               <span className="max-w-[500px] truncate font-medium hover:text-blue-600 hover:cursor-pointer">
-                {user.firstname ? user.firstname : name[0].toString()}
+                {user.firstname ? user.firstname : user.name.split(' ')[0]}
               </span>
             </DialogTrigger>
             <DialogContent>
@@ -80,7 +76,7 @@ export const columns: ColumnDef<User>[] = [
           <Dialog>
             <DialogTrigger asChild>
               <span className="max-w-[500px] truncate font-medium hover:text-blue-600 hover:cursor-pointer">
-                {user.lastname ? user.lastname : name[name.length - 1].toString()}
+                {user.lastname ? user.lastname : user.name.split(' ')[1]}
               </span>
             </DialogTrigger>
             <DialogContent>
