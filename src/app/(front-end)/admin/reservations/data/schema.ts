@@ -10,10 +10,16 @@ export const reservationSchema = z.object({
     phoneNumber: z.string(),
   }),
   customPackageData: z.object({
-    amenities: z.string().array(),
-    chairs: z.string(),
-    equipment: z.string().array(),
-    tables: z.string(),
+    items: z
+      .object({
+        id: z.string(),
+        amount: z.number(),
+        name: z.string(),
+        quantity: z.number(),
+        type: z.string(),
+      })
+      .array()
+      .optional(),
   }),
   firebaseFormattedDate: z.any(),
   packageData: packageSchema.omit({ inclusions: true }),

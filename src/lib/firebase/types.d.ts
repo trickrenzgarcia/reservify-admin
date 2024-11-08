@@ -66,10 +66,7 @@ export type Booking = {
 };
 
 export type CustomPackage = {
-  amenities: string[];
-  chairs: string;
-  equipment: string[];
-  tables: string;
+  items: Inventory[];
 };
 
 export type Reserve = {

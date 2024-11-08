@@ -42,26 +42,6 @@ export const columns: ColumnDef<Reserve>[] = [
                 <span className="font-bold">Package: </span>
                 <span>{reserve.packageData.name}</span>
               </div>
-              <div className="flex gap-2 ml-4">
-                <span className="font-bold">Amenities: </span>
-                <span>{reserve.customPackageData.amenities.map((v, i) => (
-                  <p key={v+i}>{v}</p>
-                ))}</span>
-              </div>
-              <div className="flex gap-2 ml-4">
-                <span className="font-bold">Equipments: </span>
-                <span>{reserve.customPackageData.equipment.map((v, i) => (
-                  <p key={v+i}>{v}</p>
-                ))}</span>
-              </div>
-              <div className="flex gap-2 ml-4">
-                <span className="font-bold">Chairs: </span>
-                <span>{reserve.customPackageData.chairs}</span>
-              </div>
-              <div className="flex gap-2 ml-4">
-                <span className="font-bold">Tables: </span>
-                <span>{reserve.customPackageData.tables}</span>
-              </div>
               
               <div className="flex gap-2">
                 <span className="font-bold">Time: </span>

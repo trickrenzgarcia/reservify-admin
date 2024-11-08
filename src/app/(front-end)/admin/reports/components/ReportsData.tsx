@@ -9,7 +9,6 @@ const data = [
   { name: 'Reservations Report' },
   { name: 'Inventory Report' },
   { name: 'Payment Report' },
-  { name: 'Venue Report' },
 ]
 
 export default function ReportsData() {
