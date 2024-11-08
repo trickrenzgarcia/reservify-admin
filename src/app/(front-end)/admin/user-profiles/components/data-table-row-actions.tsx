@@ -59,7 +59,7 @@ export function DataTableRowActions<TData>({
     <div className='flex gap-4'>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-blue-600" disabled={isLoading} size='responsive'>
+          <Button className="lg:text-lg h-8 rounded-2xl py-5 hover:bg-blue-600" disabled={isLoading || user.name ? true : false} size='responsive'>
             Edit
           </Button>
         </AlertDialogTrigger>

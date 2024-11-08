@@ -38,6 +38,7 @@ export default function DataTable<TData, TValue>({ columns, data, addComponent: 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isLoad, setIsLoad] = React.useState(true)
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   React.useEffect(() => {
     setIsLoad(false)
@@ -50,8 +51,16 @@ export default function DataTable<TData, TValue>({ columns, data, addComponent: 
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters
+      columnFilters,
+      globalFilter
     },
+    globalFilterFn: (row, columnId, filterValue) => {
+      // Custom global filter function if needed, else `includes` works by default
+      return String(row.getValue(columnId))
+        .toLowerCase()
+        .includes(String(filterValue).toLowerCase());
+    },
+    onGlobalFilterChange: setGlobalFilter,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
