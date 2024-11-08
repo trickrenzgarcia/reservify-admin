@@ -17,6 +17,7 @@ import {
 import React from 'react'
 import { TrendingUp } from 'lucide-react'
 export const description = "A stacked bar chart with a legend"
+
 const chartData = [
   { month: "May", sales: 450 },
   { month: "June", sales: 380},
@@ -41,7 +42,7 @@ export default function BarChartComponent() {
   return (
     <Card className='shadow-none'>
       <CardHeader>
-        <CardTitle>Total Revenues</CardTitle>
+        <CardTitle>Total Sales</CardTitle>
         <CardDescription>
           Sales Report: 6 months
         </CardDescription>

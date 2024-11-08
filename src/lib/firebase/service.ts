@@ -1,3 +1,5 @@
+"use server";
+
 import {
   getDocs,
   collection,
@@ -8,10 +10,12 @@ import {
   updateDoc,
   setDoc,
   getDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { AdminUser, FirestoreCollections } from "./types";
 import { db } from ".";
 import bcrypt from "bcryptjs";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function verifyPassword(
   plainPassword: string,
@@ -20,7 +24,10 @@ export async function verifyPassword(
   return bcrypt.compare(plainPassword, hashedPassword);
 }
 
-export async function getCollection<T>(collectionName: FirestoreCollections) {
+export async function getCollection<T>(
+  collectionName: FirestoreCollections,
+  tag?: string
+) {
   const collectionRef = collection(db, collectionName);
 
   try {
@@ -33,7 +40,9 @@ export async function getCollection<T>(collectionName: FirestoreCollections) {
           ...doc.data(),
         } as T)
     );
-
+    if (tag) {
+      revalidateTag(tag);
+    }
     return data;
   } catch (error) {
     throw error;
@@ -165,6 +174,46 @@ export async function getUsersCount(): Promise<number> {
   } catch (error) {
     throw error;
   }
+}
+
+export async function updateMessage(
+  userId: string,
+  textMessage: string
+): Promise<void> {
+  try {
+    // Define a new message with a unique ID, sender, and timestamp
+    const newMessage = {
+      id: new Date().getTime().toString(), // Use timestamp or UUID for unique ID
+      sender: "admin",
+      text: textMessage,
+    };
+
+    // Reference the customer_service collection
+    const customerServiceCollection = collection(db, "customer_service");
+
+    // Query for the document where userData.userId matches the provided userId
+    const q = query(
+      customerServiceCollection,
+      where("userData.userId", "==", userId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    // Ensure the document is found
+    if (querySnapshot.empty) {
+      throw new Error(`No document found for user with ID: ${userId}`);
+    }
+
+    // Update the conversations array in the found document
+    const docRef = querySnapshot.docs[0].ref;
+    await updateDoc(docRef, {
+      conversations: arrayUnion(newMessage),
+    });
+  } catch (error) {
+    console.error("Failed to update message:", error);
+    throw error;
+  }
+  revalidateTag("customer_service");
+  revalidatePath("/admin/service", "page");
 }
 
 export async function adminLogin(

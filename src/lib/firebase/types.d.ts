@@ -14,6 +14,7 @@ export type FirestoreCollections =
   | "admin"
   | "permits"
   | "customer_reviews"
+  | "customer_service"
   | "terms_and_conditions";
 
 export type User = {
@@ -106,6 +107,24 @@ export type CustomerReview = {
   needToImproves: string[];
   suggestion: string;
   rate: number;
+};
+
+export type CustomerService = {
+  userData: {
+    userId: string;
+    img: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    phoneNumber: string;
+  };
+  conversations: Conversation[];
+};
+
+export type Conversation = {
+  id: string;
+  sender: "admin" | "customer";
+  text: string;
 };
 
 export type AdminUser = {
