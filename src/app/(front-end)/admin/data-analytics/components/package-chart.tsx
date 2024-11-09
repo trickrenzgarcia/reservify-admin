@@ -46,6 +46,20 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function PackageChartComponent({ customerReviews }: { customerReviews: CustomerReview[] }) {
+  // Count the ratings
+  const ratingCounts = Array(5).fill(0); // Initialize counts for 1 to 5 stars
+
+  customerReviews.forEach(review => {
+    if (review.rating >= 1 && review.rating <= 5) {
+      ratingCounts[review.rating - 1] += 1; // Increment the count for the respective rating
+    }
+  });
+
+  // Prepare data for the chart
+  const chartData = ratingCounts.map((count, index) => ({
+    star: `${index + 1} Star`,
+    count: count,
+  }));
   return (
     <Card className='shadow-none'>
       <CardHeader>
@@ -54,10 +68,10 @@ export function PackageChartComponent({ customerReviews }: { customerReviews: Cu
       </CardHeader>
       <CardContent className='shadow-none'>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={[]}>
+          <BarChart data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="star1" 
+              dataKey="star" 
               tickLine={false}
               tickMargin={10}
               axisLine={false}
@@ -66,15 +80,10 @@ export function PackageChartComponent({ customerReviews }: { customerReviews: Cu
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="1" stackId="a" fill="var(--color-star3)" radius={[0, 0, 12, 12]} />
-            <Bar dataKey="2" stackId="a" fill="var(--color-star2)" />
-            <Bar dataKey="3" stackId="a" fill="var(--color-star1)" />
-            <Bar dataKey="4" stackId="a" fill="var(--color-star5)" />
-            <Bar dataKey="5" stackId="a" fill="var(--color-star4)" radius={[12, 12, 0, 0]} />
+            <Bar dataKey="count" stackId="a" fill="var(--color-star1)" radius={[12, 12, 12, 12]} />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      
     </Card>
   )
 }
