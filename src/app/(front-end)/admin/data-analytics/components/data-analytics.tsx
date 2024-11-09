@@ -9,8 +9,9 @@ import { WebVisitorsChart } from './web-visitors';
 import { PackageChartComponent } from './package-chart';
 import { Payment } from '../../payments/data/payment';
 import { calculatePaymentsSummary, formatCurrency } from '../calculator';
+import { CustomerReview } from '@/lib/firebase/types';
 
-export default function DataAnalytics({ payments }: { payments: Payment[] }) {
+export default function DataAnalytics({ payments, customerReviews }: { payments: Payment[]; customerReviews: CustomerReview[] }) {
   const currentMonth = new Date().toLocaleString("default", { month: "long" });
   const targetMonth = new Date().toLocaleString("default", { month: "short" });
   const { chartData, totalAmount, totalFee, totalNetAmount, paidPaymentsCount } = calculatePaymentsSummary(payments, targetMonth);
@@ -72,7 +73,7 @@ export default function DataAnalytics({ payments }: { payments: Payment[] }) {
           <WebVisitorsChart />
         </div>
         <div className='col-span-12 lg:col-span-7'>
-          <PackageChartComponent />
+          <PackageChartComponent customerReviews={customerReviews} />
         </div>
       </div>
     </div>
