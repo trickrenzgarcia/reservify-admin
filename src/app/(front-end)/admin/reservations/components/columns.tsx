@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 import { Reserve } from '@/lib/firebase/types'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { formatCurrency } from '../../data-analytics/calculator'
 
 export const columns: ColumnDef<Reserve>[] = [
   {
@@ -40,7 +41,13 @@ export const columns: ColumnDef<Reserve>[] = [
               </div>
               <div className="flex gap-2">
                 <span className="font-bold">Package: </span>
-                <span>{reserve.packageData.name}</span>
+                <span>{reserve.packageData.name} ({formatCurrency(reserve.packageData.price)})</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Add ons:</span>
+                <span>{reserve.customPackageData.items && reserve.customPackageData.items.map((val) => (
+                  <div>{val.name} x{val.quantity} - {formatCurrency(val.amount)}</div>
+                )) || 'N/A'}</span>
               </div>
               
               <div className="flex gap-2">
@@ -106,6 +113,23 @@ export const columns: ColumnDef<Reserve>[] = [
       return (
         <div className="flex w-[100px] items-center">
           {row.original.packageData.startTime} {row.original.packageData.startCycle} to {row.original.packageData.endTime} {row.original.packageData.endCycle}
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "packageDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date" />
+    ),
+    cell: ({ row }) => {
+
+      return (
+        <div className="flex w-[100px] items-center">
+          {new Date(row.original.firebaseFormattedDate.seconds * 1000).toLocaleDateString()}
         </div>
       )
     },
