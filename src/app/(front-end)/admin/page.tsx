@@ -5,6 +5,26 @@ import { auth } from '@/lib/auth';
 import { getCollection, getUsersCount } from '@/lib/firebase/service';
 import { Reserve } from '@/lib/firebase/types';
 import { redirect } from 'next/navigation';
+import { Payment, ResponsePayment } from './payments/data/payment';
+import { calculatePaymentsSummary, formatCurrency } from './data-analytics/calculator';
+
+async function getAllPayments(): Promise<Payment[]> {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const response = await fetch('https://api.paymongo.com/v1/payments', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${process.env.PAYMONGO_BASIC_KEY!}`
+    },
+    next: {
+      revalidate: 60,
+      tags: ['payments']
+    }
+  })
+  const data = await response.json() as ResponsePayment
+  const payments = data.data;
+  return payments
+}
 
 export default async function Home() {
   const session = await auth();
@@ -15,6 +35,9 @@ export default async function Home() {
 
   const usersCount = await getUsersCount();
   const reservations = await getCollection<Reserve>("reservations")
+  const payments = await getAllPayments();
+  const targetMonth = new Date().toLocaleString("default", { month: "short" });
+  const { totalNetAmount } = calculatePaymentsSummary(payments, targetMonth)
 
   return (
     <div className="min-h-[calc(100vh-94px)] flex w-full">
@@ -27,7 +50,7 @@ export default async function Home() {
             <CardContent className='py-8'>
               <div className='text-center'>
                 <h3 className='text-lg mb-4'>REVENUE</h3>
-                <p className='text-4xl font-bold'>PHP 0</p>
+                <p className='text-4xl font-bold'>{formatCurrency(totalNetAmount)}</p>
               </div>
             </CardContent>
           </Card>
