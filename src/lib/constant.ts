@@ -9,5 +9,4 @@ export const navList = [
   { title: "CUSTOMER PREFERENCES", href: "/admin/customer-preferences" },
   { title: "DATA ANALYTICS", href: "/admin/data-analytics" },
   { title: "REPORTS", href: "/admin/reports" },
-  { title: "CUSTOMER SERVICE", href: "/admin/service" },
 ];
