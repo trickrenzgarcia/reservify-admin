@@ -16,7 +16,7 @@ export const columns: ColumnDef<Reserve>[] = [
     ),
     cell: ({ row }) => {
       const reserve = row.original;
-
+      
       return (
         <div className="flex space-x-2">
           <Dialog>
@@ -46,6 +46,10 @@ export const columns: ColumnDef<Reserve>[] = [
               <div className="flex gap-2">
                 <span className="font-bold">Time: </span>
                 <span>{`${reserve.packageData.startTime} ${reserve.packageData.startCycle} - ${reserve.packageData.endTime} ${reserve.packageData.endCycle}`}</span>
+              </div>
+              <div className="flex gap-2">
+                <span className="font-bold">Date: </span>
+                {new Date(reserve.firebaseFormattedDate.seconds * 1000).toLocaleDateString()}
               </div>
               <div className="flex gap-2">
                 <span className="font-bold">Payment Method: </span>

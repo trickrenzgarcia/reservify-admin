@@ -72,6 +72,8 @@ export type CustomPackage = {
 export type Reserve = {
   bookingData: Booking;
   customPackageData: CustomPackage;
+  fbid: string;
+  feedbackSent: boolean;
   firebaseFormattedDate: Timestamp;
   packageData: Omit<Package, "inclusions">;
   paymentMethod: string;
