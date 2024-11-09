@@ -10,6 +10,7 @@ async function getPaymentDetail(id: string): Promise<Payment> {
       'Authorization': `Basic ${process.env.PAYMONGO_BASIC_KEY!}`
     },
     next: {
+      revalidate: 10,
       tags: ['payment']
     }
   })

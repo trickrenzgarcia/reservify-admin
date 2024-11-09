@@ -25,7 +25,7 @@ export default function PaymentDetail({ payment }: Props) {
             <div className='flex items-center justify-between'>
               <h2 className='text-lg font-semibold text-gray-700'>Payment details</h2>
               <span className='text-sm text-green-600 border border-green-400 rounded-sm bg-green-300/50 py-0 px-4'>
-                {payment.attributes.status.toUpperCase()}
+                {payment.attributes.status}
               </span>
             </div>
             <section className='flex flex-col gap-2'>
