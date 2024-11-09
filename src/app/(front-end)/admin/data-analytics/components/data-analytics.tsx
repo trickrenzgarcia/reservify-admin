@@ -8,7 +8,7 @@ import jsPDF from 'jspdf'
 import { WebVisitorsChart } from './web-visitors';
 import { PackageChartComponent } from './package-chart';
 import { Payment } from '../../payments/data/payment';
-import { calculatePaymentsSummary } from '../calculator';
+import { calculatePaymentsSummary, formatCurrency } from '../calculator';
 
 export default function DataAnalytics({ payments }: { payments: Payment[] }) {
   const currentMonth = new Date().toLocaleString("default", { month: "long" });
@@ -50,19 +50,19 @@ export default function DataAnalytics({ payments }: { payments: Payment[] }) {
           <h2 className='text-lg'>Date: {new Date().toLocaleDateString('en-PH')}</h2>
         </div>
         <div className='col-span-12 lg:col-span-5 p-4 flex flex-col gap-4'>
-          <h1 className='text-3xl font-bold text-orange-600'>Total Sales for {currentMonth}</h1>
+          <h1 className='text-3xl font-bold text-orange-600'>Sales for {currentMonth}</h1>
           <div className='flex justify-between w-3/4'>
             <h2>Sales</h2>
-            <p>{totalAmount}</p>
+            <p>{formatCurrency(totalAmount)}</p>
           </div>
           <div className='flex justify-between w-3/4'>
             <h2>Taxes</h2>
-            <p>{totalFee}</p>
+            <p>{formatCurrency(totalFee)}</p>
           </div>
           <div className='h-1 bg-gray-200 w-3/4' />
           <div className='flex justify-between w-3/4'>
-            <h2>Net Sales</h2>
-            <p>{totalNetAmount}</p>
+            <h2 className='font-bold'>Net Sales</h2>
+            <p className='font-bold'>{formatCurrency(totalNetAmount)}</p>
           </div>
         </div>
         <div className='col-span-12 lg:col-span-7'>
