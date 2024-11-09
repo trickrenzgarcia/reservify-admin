@@ -1,23 +1,49 @@
-'use client'
+'use client';
 
-import { Button } from '@/components/ui/button'
-import React, { useState } from 'react'
-import SearchBar from './SearchBar'
+import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import SearchBar from './SearchBar';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import ReactDOMServer from 'react-dom/server';
+import SalesReport from './SalesReport';
+import ReservationsReport from './ReservationsReport';
+import InventoryReport from './InventoryReport';
+import PaymentsReport from './PaymentsReport';
+import { Payment } from '../../payments/data/payment';
 
-const data = [
-  { name: 'Sales Report' },
-  { name: 'Reservations Report' },
-  { name: 'Inventory Report' },
-  { name: 'Payment Report' },
-]
+type Props = {
+  payments: Payment[]
+}
 
-export default function ReportsData() {
-  const [searchQuery, setSearchQuery] = useState('')
+export default function ReportsData({ payments }: Props) {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Filter data based on searchQuery
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Function to print Sales Report
+  const handlePrint = () => {
+    // Render SalesReport component to an HTML string
+    const reportContent = ReactDOMServer.renderToString(<SalesReport payments={payments} />);
+
+    // Open a new print window and write the HTML content
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Sales Report</title>
+            <style>
+              /* Include any custom styles you want for printing */
+              body { font-family: Arial, sans-serif; padding: 20px; }
+            </style>
+          </head>
+          <body>
+            ${reportContent}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
 
   return (
     <div className='w-full flex flex-col gap-10'>
@@ -25,18 +51,24 @@ export default function ReportsData() {
         <SearchBar onSearch={(query) => setSearchQuery(query)} />
       </div>
       <div className='flex flex-col gap-8'>
-        {filteredData.map((value, index) => (
-          <div key={value.name+index} className='flex justify-evenly'>
-            <div className='w-1/2'>
-              <h2 className='text-center text-lg font-semibold'>{value.name}</h2>
-            </div>
-            <div className='w-1/2 flex gap-4'>
-              <Button className='lg:px-10 rounded-full' type='button'>VIEW</Button>
-              <Button className='lg:px-10 rounded-full' type='button'>PRINT</Button>
-            </div>
+        <div className='flex justify-evenly'>
+          <div className='w-1/2'>
+            <h2 className='text-center text-lg font-semibold'>Sales Report</h2>
           </div>
-        ))}
+          <div className='w-1/2 flex gap-4'>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className='lg:px-10 rounded-full' type='button'>VIEW</Button>
+              </DialogTrigger>
+              <DialogContent id='sales-report'>
+                <SalesReport payments={payments} />
+              </DialogContent>
+            </Dialog>
+            <Button className='lg:px-10 rounded-full' onClick={handlePrint} type='button'>PRINT</Button>
+          </div>
+        </div>
+        {/* Add other report sections like Reservations, Inventory, and Payments here */}
       </div>
     </div>
-  )
+  );
 }
